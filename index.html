@@ -926,6 +926,31 @@ const QSECTIONS=['cono','bicono','cilindro','tronco','composto'];
 const qState={};
 QSECTIONS.forEach(s=>{qState[s]={idx:0,score:0,answered:false,done:false};});
 
+/* Converte la notazione inline dei quiz in simbologia corretta:
+   √(...) e √numero -> radice con vinculum; ⅓ ½ ⅔ ¼ ¾ ⅕ -> frazioni impilate */
+function mkFrac(a,b){return '<span class="frac"><span class="num">'+a+'</span><span class="den">'+b+'</span></span>';}
+function mathFmt(s){
+  let out='',i=0;
+  while(i<s.length){
+    const ch=s[i];
+    if(ch==='√'){
+      if(s[i+1]==='('){
+        let depth=0,j=i+1;
+        for(;j<s.length;j++){ if(s[j]==='(')depth++; else if(s[j]===')'){depth--; if(!depth)break;} }
+        out+='√<span class="rt">'+mathFmt(s.slice(i+2,j))+'</span>'; i=j+1; continue;
+      }
+      let j=i+1;
+      while(j<s.length&&(/[0-9]/.test(s[j])||((s[j]===','||s[j]==='.')&&/[0-9]/.test(s[j+1])))) j++;
+      if(j>i+1){ out+='√<span class="rt">'+s.slice(i+1,j)+'</span>'; i=j; continue; }
+      out+=ch; i++; continue;
+    }
+    const fg={'⅓':['1','3'],'½':['1','2'],'⅔':['2','3'],'¼':['1','4'],'¾':['3','4'],'⅕':['1','5']}[ch];
+    if(fg){ out+=mkFrac(fg[0],fg[1]); i++; continue; }
+    out+=ch; i++;
+  }
+  return out;
+}
+
 function renderQuiz(s){
   const st=qState[s], qs=QUIZZES[s], el=document.getElementById('qz-'+s);
   if(!el) return;
@@ -948,8 +973,8 @@ function renderQuiz(s){
         <span style="font-weight:700;color:var(--primary-d)">Punteggio: ${st.score}</span>
       </div>
       <div class="quiz-bar-wrap"><div class="quiz-bar-fill" style="width:${pct}%"></div></div>
-      <p class="quiz-q">${q.q}</p>
-      <div class="quiz-opts">${q.opts.map((o,i)=>`<button class="quiz-btn" id="qb-${s}-${i}" onclick="answerQuiz('${s}',${i})">${'ABCD'[i]}) ${o}</button>`).join('')}</div>
+      <p class="quiz-q">${mathFmt(q.q)}</p>
+      <div class="quiz-opts">${q.opts.map((o,i)=>`<button class="quiz-btn" id="qb-${s}-${i}" onclick="answerQuiz('${s}',${i})">${'ABCD'[i]}) ${mathFmt(o)}</button>`).join('')}</div>
       <div class="quiz-exp" id="qexp-${s}" style="display:none"></div>
       <button class="quiz-next" id="qnxt-${s}" style="display:none" onclick="nextQuiz('${s}')">${st.idx+1<total?'Prossima domanda →':'Vedi il risultato finale →'}</button>`;
   }
@@ -968,7 +993,7 @@ function answerQuiz(s,chosen){
   const exp=document.getElementById(`qexp-${s}`);
   exp.style.display='';
   exp.className=`quiz-exp ${correct?'ok':'no'}`;
-  exp.innerHTML=`<strong>${correct?'✓ Corretto!':'✗ Sbagliato.'}</strong> ${q.exp}`;
+  exp.innerHTML=`<strong>${correct?'✓ Corretto!':'✗ Sbagliato.'}</strong> ${mathFmt(q.exp)}`;
   document.getElementById(`qnxt-${s}`).style.display='';
 }
 function nextQuiz(s){
