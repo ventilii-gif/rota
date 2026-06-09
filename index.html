@@ -71,6 +71,12 @@ table.ftable td:first-child{font-weight:700;color:var(--primary-d);white-space:n
 table.ftable tr:nth-child(even) td{background:var(--surface2)}
 .fx{font-family:"Cambria Math","STIX Two Math",Georgia,serif}
 
+/* ===== Math notation (fractions, roots) ===== */
+.frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 .2em;font-size:.94em}
+.frac>.num{padding:0 .4em;line-height:1.15}
+.frac>.den{border-top:1.7px solid currentColor;padding:0 .4em;line-height:1.2}
+.rt{border-top:1.7px solid currentColor;padding:.04em .16em 0;margin-left:-.05em}
+
 /* ===== Formulas ===== */
 .formula{background:var(--primary-l);border-left:3px solid var(--primary);
   padding:.6rem .9rem;margin:.5rem 0;border-radius:0 8px 8px 0;
@@ -235,10 +241,11 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
       <li><b>ipotenusa</b> <span class="ar">→</span> diventa l'<b>apotema</b> a (il lato) del cono</li>
     </ul>
     <p>Poiché il triangolo è rettangolo, vale il teorema di Pitagora tra apotema, raggio e altezza:</p>
-    <div class="formula">a² = r² + h² &nbsp;&nbsp;⇒&nbsp;&nbsp; a = √(r² + h²)</div>
+    <div class="formula">a² = r² + h² &nbsp;&nbsp;⇒&nbsp;&nbsp; a = √<span class="rt">r² + h²</span></div>
     <h3>Volume e superfici</h3>
-    <div class="formula">V = ⅓ · π · r² · h</div>
-    <div class="formula">S<sub>laterale</sub> = π · r · a &nbsp;·&nbsp; S<sub>base</sub> = π · r²</div>
+    <div class="formula">V = <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · h</div>
+    <div class="formula">S<sub>laterale</sub> = π · r · a</div>
+    <div class="formula">S<sub>base</sub> = π · r²</div>
     <div class="formula">S<sub>totale</sub> = π · r · (r + a)</div>
     <div class="tip">🔁 Se lo stesso triangolo ruota attorno all'<em>altro</em> cateto, raggio e altezza si scambiano: si ottiene un cono <strong>diverso</strong> (ma con la stessa apotema, perché l'ipotenusa non cambia).</div>
   </div>
@@ -278,9 +285,9 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
       <li><b>ogni cateto</b> <span class="ar">→</span> è l'<b>apotema</b> del cono corrispondente</li>
     </ul>
     <p>Il raggio comune si ricava dall'<strong>equivalenza delle aree</strong>: l'area del triangolo si può scrivere in due modi.</p>
-    <div class="formula">½ · c₁ · c₂ = ½ · i · r &nbsp;&nbsp;⇒&nbsp;&nbsp; r = (c₁ · c₂) / i</div>
+    <div class="formula"><span class="frac"><span class="num">1</span><span class="den">2</span></span> · c₁ · c₂ = <span class="frac"><span class="num">1</span><span class="den">2</span></span> · i · r &nbsp;&nbsp;⇒&nbsp;&nbsp; r = <span class="frac"><span class="num">c₁ · c₂</span><span class="den">i</span></span></div>
     <h3>Volume e superficie</h3>
-    <div class="formula">V = ⅓ · π · r² · i</div>
+    <div class="formula">V = <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · i</div>
     <div class="formula">S = π · r · c₁ + π · r · c₂ = π · r · (c₁ + c₂)</div>
     <div class="warn">⚠️ Le basi dei due coni <strong>coincidono</strong>: sono interne al solido, quindi <em>non</em> si contano nella superficie. Restano solo le due superfici laterali.</div>
   </div>
@@ -318,7 +325,8 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
     <p>Il cilindro ha <strong>due basi</strong> circolari uguali. La sua superficie laterale, "srotolata", è un <strong>rettangolo</strong> con base 2πr (la circonferenza) e altezza h.</p>
     <h3>Volume e superfici</h3>
     <div class="formula">V = π · r² · h</div>
-    <div class="formula">S<sub>laterale</sub> = 2 · π · r · h &nbsp;·&nbsp; S<sub>base</sub> = π · r²</div>
+    <div class="formula">S<sub>laterale</sub> = 2 · π · r · h</div>
+    <div class="formula">S<sub>base</sub> = π · r²</div>
     <div class="formula">S<sub>totale</sub> = 2 · π · r · (r + h)</div>
     <div class="tip">🔁 Ruotando lo stesso rettangolo attorno all'<em>altro</em> lato, raggio e altezza si scambiano: si ottiene un cilindro diverso, in generale con volume diverso.</div>
   </div>
@@ -359,11 +367,11 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
       <li><b>lato obliquo</b> <span class="ar">→</span> <b>apotema</b> a del tronco</li>
     </ul>
     <p>L'apotema è l'ipotenusa di un triangolo rettangolo con cateti h e (R − r), quindi per Pitagora:</p>
-    <div class="formula">a = √(h² + (R − r)²)</div>
+    <div class="formula">a = √<span class="rt">h² + (R − r)²</span></div>
     <h3>Volume e superfici</h3>
-    <div class="formula">V = ⅓ · π · h · (R² + r² + R·r)</div>
+    <div class="formula">V = <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · h · (R² + r² + R · r)</div>
     <div class="formula">S<sub>laterale</sub> = π · (R + r) · a</div>
-    <div class="formula">S<sub>totale</sub> = π·(R² + r²) + π·(R + r)·a</div>
+    <div class="formula">S<sub>totale</sub> = π · (R² + r²) + π · (R + r) · a</div>
     <div class="tip">💡 Il tronco di cono si può anche immaginare come un <strong>«cono grande meno cono piccolo»</strong>: un cono completo a cui è stata tolta la punta.</div>
   </div>
   <p class="sec-label">Simulazione</p>
@@ -402,7 +410,7 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
     </ul>
     <h3>Volume</h3>
     <div class="formula">V = V<sub>cilindro</sub> + V<sub>cono</sub></div>
-    <div class="formula">V = π·r²·b &nbsp;+&nbsp; ⅓·π·r²·(B − b)</div>
+    <div class="formula">V = π · r² · b &nbsp;+&nbsp; <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · (B − b)</div>
     <div class="warn">⚠️ Il volume del solido composto si calcola <strong>sommando</strong> i volumi dei due solidi che lo formano. Attenzione: cilindro e cono hanno lo <em>stesso</em> raggio ma altezze diverse.</div>
   </div>
   <p class="sec-label">Simulazione</p>
@@ -432,7 +440,7 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
   <div class="card">
     <h2>📋 Formulario dei solidi di rotazione</h2>
     <p>Tutte le formule in un colpo d'occhio. Puoi anche stamparle con il pulsante <strong>🖨️ Stampa teoria</strong> in alto.</p>
-    <div class="tip">📐 Legenda: <b>r</b> raggio · <b>h</b> altezza · <b>a</b> apotema · <b>R</b>, <b>r</b> raggi del tronco · <b>i</b> ipotenusa · <b>c₁</b>, <b>c₂</b> cateti · <b>B</b>, <b>b</b> basi del trapezio. Nei calcoli usa <b>π ≈ 3,14</b>.</p>
+    <div class="tip">📐 Legenda: <b>r</b> raggio · <b>h</b> altezza · <b>a</b> apotema · <b>R</b>, <b>r</b> raggi del tronco · <b>i</b> ipotenusa · <b>c₁</b>, <b>c₂</b> cateti · <b>B</b>, <b>b</b> basi del trapezio. Nei calcoli usa <b>π ≈ 3,14</b>.</div>
   </div>
 
   <div class="card">
@@ -452,10 +460,10 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
       <table class="ftable">
         <tr><th>Solido</th><th>Volume</th><th>Superficie laterale</th><th>Superficie totale</th></tr>
         <tr><td>Cilindro</td><td class="fx">π · r² · h</td><td class="fx">2 · π · r · h</td><td class="fx">2 · π · r · (r + h)</td></tr>
-        <tr><td>Cono</td><td class="fx">⅓ · π · r² · h</td><td class="fx">π · r · a</td><td class="fx">π · r · (r + a)</td></tr>
-        <tr><td>Tronco di cono</td><td class="fx">⅓ · π · h · (R² + r² + R·r)</td><td class="fx">π · (R + r) · a</td><td class="fx">π · (R² + r²) + π · (R + r) · a</td></tr>
-        <tr><td>Bicono</td><td class="fx">⅓ · π · r² · i</td><td class="fx">π · r · (c₁ + c₂)</td><td class="fx">= sup. laterale (le basi sono interne)</td></tr>
-        <tr><td>Cilindro + cono</td><td class="fx">π · r² · b + ⅓ · π · r² · (B − b)</td><td colspan="2">somma delle superfici dei due solidi</td></tr>
+        <tr><td>Cono</td><td class="fx"><span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · h</td><td class="fx">π · r · a</td><td class="fx">π · r · (r + a)</td></tr>
+        <tr><td>Tronco di cono</td><td class="fx"><span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · h · (R² + r² + R · r)</td><td class="fx">π · (R + r) · a</td><td class="fx">π · (R² + r²) + π · (R + r) · a</td></tr>
+        <tr><td>Bicono</td><td class="fx"><span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · i</td><td class="fx">π · r · (c₁ + c₂)</td><td class="fx">= sup. laterale (le basi sono interne)</td></tr>
+        <tr><td>Cilindro + cono</td><td class="fx">π · r² · b + <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · (B − b)</td><td colspan="2">somma delle superfici dei due solidi</td></tr>
       </table>
     </div>
     <div class="tip">💡 Le formule di area del cerchio (π·r²) e della circonferenza (2·π·r) sono il "mattone" di tutte le altre.</div>
@@ -464,11 +472,12 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
   <div class="card">
     <h2>Relazioni utili (teorema di Pitagora)</h2>
     <p><strong>Cono</strong> — l'apotema è l'ipotenusa del triangolo generatore:</p>
-    <div class="formula">a² = r² + h² &nbsp;⇒&nbsp; a = √(r² + h²)</div>
+    <div class="formula">a² = r² + h² &nbsp;⇒&nbsp; a = √<span class="rt">r² + h²</span></div>
     <p><strong>Tronco di cono</strong> — l'apotema con cateti h e (R − r):</p>
-    <div class="formula">a = √(h² + (R − r)²)</div>
-    <p><strong>Bicono</strong> — raggio comune e altezze (dall'ipotenusa i = √(c₁² + c₂²)):</p>
-    <div class="formula">r = (c₁ · c₂) / i &nbsp;·&nbsp; h₁ + h₂ = i</div>
+    <div class="formula">a = √<span class="rt">h² + (R − r)²</span></div>
+    <p><strong>Bicono</strong> — raggio comune e altezze (dall'ipotenusa i = √<span class="rt">c₁² + c₂²</span>):</p>
+    <div class="formula">r = <span class="frac"><span class="num">c₁ · c₂</span><span class="den">i</span></span></div>
+    <div class="formula">h₁ + h₂ = i</div>
   </div>
 </section>
 
