@@ -62,6 +62,15 @@ section.scene.active{display:block}
 .corr li b{color:var(--primary-d)}
 .corr li .ar{color:var(--muted);font-weight:700}
 
+/* ===== Formula table ===== */
+.ftable-wrap{overflow-x:auto;margin:.55rem 0;-webkit-overflow-scrolling:touch}
+table.ftable{border-collapse:collapse;width:100%;font-size:.85em;min-width:540px}
+table.ftable th,table.ftable td{border:1px solid var(--border);padding:.5rem .6rem;text-align:left;vertical-align:top}
+table.ftable th{background:var(--primary-l);color:var(--primary-d);font-weight:700;white-space:nowrap}
+table.ftable td:first-child{font-weight:700;color:var(--primary-d);white-space:nowrap}
+table.ftable tr:nth-child(even) td{background:var(--surface2)}
+.fx{font-family:"Cambria Math","STIX Two Math",Georgia,serif}
+
 /* ===== Formulas ===== */
 .formula{background:var(--primary-l);border-left:3px solid var(--primary);
   padding:.6rem .9rem;margin:.5rem 0;border-radius:0 8px 8px 0;
@@ -169,6 +178,9 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
   section.scene#home::before{content:none}
   .card{box-shadow:none;border:1px solid #ccc;break-inside:avoid;margin-bottom:.7rem}
   .formula{background:#f1f1f1;border-left:3px solid #444}
+  .ftable-wrap{overflow:visible}
+  table.ftable{min-width:0;font-size:9pt}
+  table.ftable th{background:#eee;color:#000}
   .print-only{display:block}
   .lead{display:none}
 }
@@ -186,6 +198,7 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
   <button data-tab="cilindro">🟦 Cilindro</button>
   <button data-tab="tronco">🪣 Tronco di cono</button>
   <button data-tab="composto">➕ Cilindro+cono</button>
+  <button data-tab="formulario">📋 Formulario</button>
 </nav>
 <main>
 
@@ -206,6 +219,7 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
     <button class="home-card" data-go="cilindro"><span class="ico">🟦</span><strong>Cilindro</strong><span>Rettangolo attorno a un lato</span></button>
     <button class="home-card" data-go="tronco"><span class="ico">🪣</span><strong>Tronco di cono</strong><span>Trapezio rettangolo attorno all'altezza</span></button>
     <button class="home-card" data-go="composto"><span class="ico">➕</span><strong>Cilindro + cono</strong><span>Trapezio rettangolo attorno alla base maggiore</span></button>
+    <button class="home-card" data-go="formulario"><span class="ico">📋</span><strong>Formulario</strong><span>Tutte le formule a colpo d'occhio</span></button>
   </div>
 </section>
 
@@ -411,6 +425,51 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
     </div>
   </div>
   <div id="qz-composto" class="quiz-block"></div>
+</section>
+
+<!-- ============ FORMULARIO ============ -->
+<section class="scene" id="formulario" data-title="Formulario — tutte le formule">
+  <div class="card">
+    <h2>📋 Formulario dei solidi di rotazione</h2>
+    <p>Tutte le formule in un colpo d'occhio. Puoi anche stamparle con il pulsante <strong>🖨️ Stampa teoria</strong> in alto.</p>
+    <div class="tip">📐 Legenda: <b>r</b> raggio · <b>h</b> altezza · <b>a</b> apotema · <b>R</b>, <b>r</b> raggi del tronco · <b>i</b> ipotenusa · <b>c₁</b>, <b>c₂</b> cateti · <b>B</b>, <b>b</b> basi del trapezio. Nei calcoli usa <b>π ≈ 3,14</b>.</p>
+  </div>
+
+  <div class="card">
+    <h2>Da quale rotazione nasce ogni solido</h2>
+    <ul class="corr">
+      <li><b>Triangolo rettangolo</b> attorno a un <b>cateto</b> <span class="ar">→</span> Cono</li>
+      <li><b>Triangolo rettangolo</b> attorno all'<b>ipotenusa</b> <span class="ar">→</span> Bicono (doppio cono)</li>
+      <li><b>Rettangolo</b> attorno a un <b>lato</b> <span class="ar">→</span> Cilindro</li>
+      <li><b>Trapezio rettangolo</b> attorno all'<b>altezza</b> <span class="ar">→</span> Tronco di cono</li>
+      <li><b>Trapezio rettangolo</b> attorno alla <b>base maggiore</b> <span class="ar">→</span> Cilindro + cono</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Volumi e superfici</h2>
+    <div class="ftable-wrap">
+      <table class="ftable">
+        <tr><th>Solido</th><th>Volume</th><th>Superficie laterale</th><th>Superficie totale</th></tr>
+        <tr><td>Cilindro</td><td class="fx">π · r² · h</td><td class="fx">2 · π · r · h</td><td class="fx">2 · π · r · (r + h)</td></tr>
+        <tr><td>Cono</td><td class="fx">⅓ · π · r² · h</td><td class="fx">π · r · a</td><td class="fx">π · r · (r + a)</td></tr>
+        <tr><td>Tronco di cono</td><td class="fx">⅓ · π · h · (R² + r² + R·r)</td><td class="fx">π · (R + r) · a</td><td class="fx">π · (R² + r²) + π · (R + r) · a</td></tr>
+        <tr><td>Bicono</td><td class="fx">⅓ · π · r² · i</td><td class="fx">π · r · (c₁ + c₂)</td><td class="fx">= sup. laterale (le basi sono interne)</td></tr>
+        <tr><td>Cilindro + cono</td><td class="fx">π · r² · b + ⅓ · π · r² · (B − b)</td><td colspan="2">somma delle superfici dei due solidi</td></tr>
+      </table>
+    </div>
+    <div class="tip">💡 Le formule di area del cerchio (π·r²) e della circonferenza (2·π·r) sono il "mattone" di tutte le altre.</div>
+  </div>
+
+  <div class="card">
+    <h2>Relazioni utili (teorema di Pitagora)</h2>
+    <p><strong>Cono</strong> — l'apotema è l'ipotenusa del triangolo generatore:</p>
+    <div class="formula">a² = r² + h² &nbsp;⇒&nbsp; a = √(r² + h²)</div>
+    <p><strong>Tronco di cono</strong> — l'apotema con cateti h e (R − r):</p>
+    <div class="formula">a = √(h² + (R − r)²)</div>
+    <p><strong>Bicono</strong> — raggio comune e altezze (dall'ipotenusa i = √(c₁² + c₂²)):</p>
+    <div class="formula">r = (c₁ · c₂) / i &nbsp;·&nbsp; h₁ + h₂ = i</div>
+  </div>
 </section>
 
 </main>
