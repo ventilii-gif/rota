@@ -184,7 +184,8 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
   <button data-tab="cono">🔺 Cono</button>
   <button data-tab="bicono">⏳ Bicono</button>
   <button data-tab="cilindro">🟦 Cilindro</button>
-  <button data-tab="trapezio">🪣 Trapezio</button>
+  <button data-tab="tronco">🪣 Tronco di cono</button>
+  <button data-tab="composto">➕ Cilindro+cono</button>
 </nav>
 <main>
 
@@ -203,7 +204,8 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
     <button class="home-card" data-go="cono"><span class="ico">🔺</span><strong>Cono</strong><span>Triangolo rettangolo attorno a un cateto</span></button>
     <button class="home-card" data-go="bicono"><span class="ico">⏳</span><strong>Bicono</strong><span>Triangolo rettangolo attorno all'ipotenusa</span></button>
     <button class="home-card" data-go="cilindro"><span class="ico">🟦</span><strong>Cilindro</strong><span>Rettangolo attorno a un lato</span></button>
-    <button class="home-card" data-go="trapezio"><span class="ico">🪣</span><strong>Trapezio</strong><span>Tronco di cono e solidi composti</span></button>
+    <button class="home-card" data-go="tronco"><span class="ico">🪣</span><strong>Tronco di cono</strong><span>Trapezio rettangolo attorno all'altezza</span></button>
+    <button class="home-card" data-go="composto"><span class="ico">➕</span><strong>Cilindro + cono</strong><span>Trapezio rettangolo attorno alla base maggiore</span></button>
   </div>
 </section>
 
@@ -330,58 +332,85 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
   <div id="qz-cilindro" class="quiz-block"></div>
 </section>
 
-<!-- ============ TRAPEZIO ============ -->
-<section class="scene" id="trapezio" data-title="Trapezio — tronco di cono e solidi composti">
+<!-- ============ TRONCO DI CONO ============ -->
+<section class="scene" id="tronco" data-title="Tronco di cono — trapezio rettangolo attorno all'altezza">
   <p class="sec-label">Teoria</p>
   <div class="card">
-    <h2>🪣 Dal trapezio: tronco di cono e solidi composti</h2>
-    <h3>(a) Attorno all'altezza → tronco di cono</h3>
-    <p>Un <strong>trapezio rettangolo</strong> che ruota attorno al lato <strong>perpendicolare alle basi</strong> (l'altezza) genera un <strong>tronco di cono</strong>.</p>
+    <h2>🪣 Il tronco di cono</h2>
+    <p>Un <strong>trapezio rettangolo</strong> che ruota di un giro completo attorno al lato <strong>perpendicolare alle basi</strong> (l'altezza) genera un <strong>tronco di cono</strong>.</p>
     <ul class="corr">
       <li><b>base maggiore</b> <span class="ar">→</span> <b>raggio maggiore</b> R</li>
       <li><b>base minore</b> <span class="ar">→</span> <b>raggio minore</b> r</li>
-      <li><b>altezza</b> <span class="ar">→</span> <b>altezza</b> h del tronco</li>
+      <li><b>altezza</b> (lato ⊥ alle basi) <span class="ar">→</span> <b>altezza</b> h del tronco</li>
       <li><b>lato obliquo</b> <span class="ar">→</span> <b>apotema</b> a del tronco</li>
     </ul>
+    <p>L'apotema è l'ipotenusa di un triangolo rettangolo con cateti h e (R − r), quindi per Pitagora:</p>
     <div class="formula">a = √(h² + (R − r)²)</div>
+    <h3>Volume e superfici</h3>
     <div class="formula">V = ⅓ · π · h · (R² + r² + R·r)</div>
-    <div class="formula">S<sub>laterale</sub> = π · (R + r) · a &nbsp;·&nbsp; S<sub>basi</sub> = π·R² + π·r²</div>
-    <h3>(b) Attorno a una base → solido composto</h3>
-    <p>Se invece il trapezio rettangolo ruota attorno alla <strong>base maggiore</strong>, si ottiene un <strong>solido composto</strong>: un <strong>cilindro</strong> con sopra un <strong>cono</strong>.</p>
-    <ul class="corr">
-      <li><b>altezza del trapezio</b> <span class="ar">→</span> <b>raggio comune</b> di cilindro e cono</li>
-      <li><b>base minore</b> <span class="ar">→</span> altezza del <b>cilindro</b></li>
-      <li><b>differenza delle basi</b> (B − b) <span class="ar">→</span> altezza del <b>cono</b></li>
-    </ul>
-    <div class="formula">V = π·r²·b<sub>min</sub> + ⅓·π·r²·(B − b<sub>min</sub>)</div>
-    <div class="tip">💡 Il tronco di cono si può anche immaginare come un <strong>«cono grande meno cono piccolo»</strong>: il cono completo a cui è stata tolta la punta.</div>
+    <div class="formula">S<sub>laterale</sub> = π · (R + r) · a</div>
+    <div class="formula">S<sub>totale</sub> = π·(R² + r²) + π·(R + r)·a</div>
+    <div class="tip">💡 Il tronco di cono si può anche immaginare come un <strong>«cono grande meno cono piccolo»</strong>: un cono completo a cui è stata tolta la punta.</div>
   </div>
   <p class="sec-label">Simulazione</p>
   <div class="card sim-block">
-    <p class="lead">Scegli che cosa generare, regola le misure del trapezio e trascina «rotazione».</p>
+    <p class="lead">Regola le misure del trapezio e trascina «rotazione» per veder generare il tronco di cono.</p>
     <div class="sim-layout">
       <div class="sim-pane">
-        <svg class="sim" id="svgTrapezio" viewBox="0 0 470 300" preserveAspectRatio="xMidYMid meet"></svg>
+        <svg class="sim" id="svgTronco" viewBox="0 0 470 300" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
       <div class="ctrl-pane">
         <div class="ctrl">
-          <label><span class="nm">tipo di rotazione</span>
-            <select id="trMode">
-              <option value="tronco">attorno all'altezza → tronco di cono</option>
-              <option value="comp">attorno alla base magg. → cilindro + cono</option>
-            </select>
-          </label>
-          <label><span class="nm">base maggiore</span><input type="range" id="trA" min="2" max="12" step="0.5" value="6"><span class="v" id="trAv">6</span></label>
-          <label><span class="nm">base minore</span><input type="range" id="trB" min="1" max="11" step="0.5" value="3"><span class="v" id="trBv">3</span></label>
-          <label><span class="nm">altezza</span><input type="range" id="trH" min="1" max="10" step="0.5" value="4"><span class="v" id="trHv">4</span></label>
-          <label><span class="nm">rotazione</span><input type="range" id="trSw" min="0" max="360" step="2" value="360"><span class="v" id="trSwv">360°</span></label>
+          <label><span class="nm">base maggiore</span><input type="range" id="tkA" min="2" max="12" step="0.5" value="6"><span class="v" id="tkAv">6</span></label>
+          <label><span class="nm">base minore</span><input type="range" id="tkB" min="1" max="11" step="0.5" value="3"><span class="v" id="tkBv">3</span></label>
+          <label><span class="nm">altezza</span><input type="range" id="tkH" min="1" max="10" step="0.5" value="4"><span class="v" id="tkHv">4</span></label>
+          <label><span class="nm">rotazione</span><input type="range" id="tkSw" min="0" max="360" step="2" value="360"><span class="v" id="tkSwv">360°</span></label>
         </div>
-        <div class="read" id="trRead"></div>
-        <div class="solidname" id="trName">Solido generato: tronco di cono</div>
+        <div class="read" id="tkRead"></div>
+        <div class="solidname" id="tkName">Solido generato: tronco di cono</div>
       </div>
     </div>
   </div>
-  <div id="qz-trapezio" class="quiz-block"></div>
+  <div id="qz-tronco" class="quiz-block"></div>
+</section>
+
+<!-- ============ CILINDRO + CONO ============ -->
+<section class="scene" id="composto" data-title="Solido composto — trapezio rettangolo attorno alla base maggiore">
+  <p class="sec-label">Teoria</p>
+  <div class="card">
+    <h2>➕ Solido composto: cilindro + cono</h2>
+    <p>Se il <strong>trapezio rettangolo</strong> ruota attorno alla <strong>base maggiore</strong>, si ottiene un <strong>solido composto</strong>: un <strong>cilindro</strong> con sopra un <strong>cono</strong>.</p>
+    <p>L'altezza (lato ⊥ alle basi) "spazza" un disco e fa da raggio; la base minore genera la parte cilindrica; il lato obliquo, ruotando, genera il cono.</p>
+    <ul class="corr">
+      <li><b>altezza del trapezio</b> <span class="ar">→</span> <b>raggio comune</b> r di cilindro e cono</li>
+      <li><b>base minore</b> <span class="ar">→</span> altezza del <b>cilindro</b></li>
+      <li><b>differenza delle basi</b> (B − b) <span class="ar">→</span> altezza del <b>cono</b></li>
+    </ul>
+    <h3>Volume</h3>
+    <div class="formula">V = V<sub>cilindro</sub> + V<sub>cono</sub></div>
+    <div class="formula">V = π·r²·b &nbsp;+&nbsp; ⅓·π·r²·(B − b)</div>
+    <div class="warn">⚠️ Il volume del solido composto si calcola <strong>sommando</strong> i volumi dei due solidi che lo formano. Attenzione: cilindro e cono hanno lo <em>stesso</em> raggio ma altezze diverse.</div>
+  </div>
+  <p class="sec-label">Simulazione</p>
+  <div class="card sim-block">
+    <p class="lead">Regola le misure del trapezio e trascina «rotazione» per veder generare il cilindro sormontato dal cono.</p>
+    <div class="sim-layout">
+      <div class="sim-pane">
+        <svg class="sim" id="svgComposto" viewBox="0 0 470 300" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="ctrl-pane">
+        <div class="ctrl">
+          <label><span class="nm">base maggiore</span><input type="range" id="cpA" min="2" max="12" step="0.5" value="6"><span class="v" id="cpAv">6</span></label>
+          <label><span class="nm">base minore</span><input type="range" id="cpB" min="1" max="11" step="0.5" value="3"><span class="v" id="cpBv">3</span></label>
+          <label><span class="nm">altezza</span><input type="range" id="cpH" min="1" max="10" step="0.5" value="4"><span class="v" id="cpHv">4</span></label>
+          <label><span class="nm">rotazione</span><input type="range" id="cpSw" min="0" max="360" step="2" value="360"><span class="v" id="cpSwv">360°</span></label>
+        </div>
+        <div class="read" id="cpRead"></div>
+        <div class="solidname" id="cpName">Solido generato: cilindro + cono</div>
+      </div>
+    </div>
+  </div>
+  <div id="qz-composto" class="quiz-block"></div>
 </section>
 
 </main>
@@ -594,68 +623,71 @@ function renderCilindro(){
   document.getElementById('ciName').textContent='Solido generato: CILINDRO (r = '+fmt(r,1)+' cm, h = '+fmt(h,1)+' cm)';
 }
 
-/* ============ TRAPEZIO ============ */
-function renderTrapezio(){
-  const mode=val('trMode');
-  let B=+val('trA'), bm=+val('trB'), h=+val('trH');
+/* ============ TRONCO DI CONO (attorno all'altezza) ============ */
+function renderTronco(){
+  let B=+val('tkA'), bm=+val('tkB'), h=+val('tkH');
   if(bm>=B) bm=B-0.5;            // la base minore deve essere < base maggiore
-  const Th=(+val('trSw'))*PI/180, full=Th>=358*PI/180;
-  let flat,sol,prof,fig,bnd,read,name;
-  if(mode==='tronco'){
-    // asse = altezza; basi -> raggi
-    const R=B, r=bm, apo=Math.hypot(h,R-r);
-    const sc=Math.min(92/R,190/h,42);
-    bnd=[[0,0],[R,0],[r,h],[0,h]];
-    flat=axisLine(XF,YB-h*sc,YB)+flatPoly(XF,YB,sc,bnd)+rAngle(XF,YB,1,-1);
-    flat+=txt(XF-6,YB-h*sc/2+3,'h',CO.h,'end',12,700);
-    flat+=txt(XF+R*sc/2,YB+15,'R',CO.b,'middle',12,700);
-    flat+=txt(XF+r*sc/2,YB-h*sc-5,'r',CO.b,'middle',11,700);
-    flat+=txt(XF+(R+r)*sc*0.5+6,YB-h*sc*0.5,'a',CO.a,'start',11,700);
-    prof=[[R*sc,0],[r*sc,h*sc]];
-    fig=[[0,0],[R*sc,0],[r*sc,h*sc],[0,h*sc]];
-    sol=defs('gTr')+axisLine(X3,YB-h*sc,YB);
-    sol+=`<g opacity="${full?1:0.22}">`+drawSolid3D(X3,YB,prof,'gTr')+'</g>';
-    if(!full) sol+=drawSweep3D(X3,YB,prof,fig,Th);
-    sol+=dline(X3,YB,X3+R*sc,YB,CO.b,'',2)+txt(X3+R*sc/2,YB+16,'R',CO.b,'middle',11,700);
-    sol+=txt(X3,YB-h*sc-7,'r',CO.b,'middle',11,700)+txt(X3-8,YB-h*sc/2,'h',CO.h,'end',11,700);
-    const V=PI*h*(R*R+r*r+R*r)/3, Sl=PI*(R+r)*apo, Sb=PI*R*R+PI*r*r, St=Sl+Sb;
-    read=readItem('raggio magg. R',fmt(R,1),'cm')+readItem('raggio min. r',fmt(r,1),'cm')
-      +readItem('altezza h',fmt(h,1),'cm')+readItem('apotema a',fmt(apo),'cm')
-      +readItem('Volume',fmt(V),'cm³')+readItem('Sup. laterale',fmt(Sl),'cm²')
-      +readItem('Sup. totale',fmt(St),'cm²');
-    name='Solido generato: TRONCO DI CONO';
-  } else {
-    // asse = base maggiore; raggio = altezza del trapezio
-    const r=h;                 // raggio comune = altezza del trapezio
-    const Hc=B;                // altezza totale del solido = base maggiore
-    const lc=bm;               // lunghezza cilindro = base minore
-    const sc=Math.min(92/r,190/Hc,42);
-    bnd=[[0,0],[r,0],[r,lc],[0,Hc]];
-    flat=axisLine(XF,YB-Hc*sc,YB)+flatPoly(XF,YB,sc,bnd)+rAngle(XF,YB,1,-1);
-    flat+=txt(XF-6,YB-Hc*sc/2,'base magg.',CO.b,'end',9,600);
-    flat+=txt(XF+r*sc/2,YB+15,'h = r',CO.r,'middle',11,700);
-    flat+=txt(XF+r*sc+6,YB-lc*sc/2,'base min.',CO.b,'start',9,600);
-    prof=[[r*sc,0],[r*sc,lc*sc],[0,Hc*sc]];
-    fig=[[0,0],[r*sc,0],[r*sc,lc*sc],[0,Hc*sc]];
-    sol=defs('gTc')+axisLine(X3,YB-Hc*sc,YB);
-    sol+=`<g opacity="${full?1:0.22}">`+drawSolid3D(X3,YB,prof,'gTc')+'</g>';
-    if(!full) sol+=drawSweep3D(X3,YB,prof,fig,Th);
-    sol+=dline(X3,YB,X3+r*sc,YB,CO.r,'',2)+txt(X3+r*sc/2,YB+16,'r',CO.r,'middle',11,700);
-    sol+=txt(X3+r*sc+4,YB-lc*sc*0.5,'cilindro',CO.solidD,'start',9,600);
-    sol+=txt(X3+r*sc*0.4,YB-(lc+Hc)*sc*0.5,'cono',CO.solidD,'start',9,600);
-    const Vcil=PI*r*r*lc, Vcono=PI*r*r*(B-bm)/3, V=Vcil+Vcono;
-    read=readItem('raggio r = h',fmt(r,1),'cm')+readItem('cilindro alto',fmt(lc,1),'cm')
-      +readItem('cono alto (B−b)',fmt(B-bm,1),'cm')+readItem('Vol. cilindro',fmt(Vcil),'cm³')
-      +readItem('Vol. cono',fmt(Vcono),'cm³')+readItem('Volume totale',fmt(V),'cm³');
-    name='Solido generato: CILINDRO + CONO';
-  }
-  document.getElementById('svgTrapezio').innerHTML=
+  const Th=(+val('tkSw'))*PI/180, full=Th>=358*PI/180;
+  const R=B, r=bm, apo=Math.hypot(h,R-r);
+  const sc=Math.min(92/R,190/h,42);
+  const bnd=[[0,0],[R,0],[r,h],[0,h]];
+  let flat=axisLine(XF,YB-h*sc,YB)+flatPoly(XF,YB,sc,bnd)+rAngle(XF,YB,1,-1);
+  flat+=txt(XF-6,YB-h*sc/2+3,'h',CO.h,'end',12,700);
+  flat+=txt(XF+R*sc/2,YB+15,'R',CO.b,'middle',12,700);
+  flat+=txt(XF+r*sc/2,YB-h*sc-5,'r',CO.b,'middle',11,700);
+  flat+=txt(XF+(R+r)*sc*0.5+6,YB-h*sc*0.5,'a',CO.a,'start',11,700);
+  const prof=[[R*sc,0],[r*sc,h*sc]];
+  const fig=[[0,0],[R*sc,0],[r*sc,h*sc],[0,h*sc]];
+  let sol=defs('gTk')+axisLine(X3,YB-h*sc,YB);
+  sol+=`<g opacity="${full?1:0.22}">`+drawSolid3D(X3,YB,prof,'gTk')+'</g>';
+  if(!full) sol+=drawSweep3D(X3,YB,prof,fig,Th);
+  sol+=dline(X3,YB,X3+R*sc,YB,CO.b,'',2)+txt(X3+R*sc/2,YB+16,'R',CO.b,'middle',11,700);
+  sol+=txt(X3,YB-h*sc-7,'r',CO.b,'middle',11,700)+txt(X3-8,YB-h*sc/2,'h',CO.h,'end',11,700);
+  document.getElementById('svgTronco').innerHTML=
     txt(XF+10,18,'Figura generatrice','#6b7280','middle',11,700)
     +txt(X3,18,'Solido di rotazione','#6b7280','middle',11,700)
-    +txt(218,150,'⟳',CO.axis,'middle',26,700)
-    +flat+sol;
-  document.getElementById('trRead').innerHTML=read;
-  document.getElementById('trName').textContent=name;
+    +txt(218,150,'⟳',CO.axis,'middle',26,700)+flat+sol;
+  const V=PI*h*(R*R+r*r+R*r)/3, Sl=PI*(R+r)*apo, Sb=PI*R*R+PI*r*r, St=Sl+Sb;
+  document.getElementById('tkRead').innerHTML=
+    readItem('raggio magg. R',fmt(R,1),'cm')+readItem('raggio min. r',fmt(r,1),'cm')
+    +readItem('altezza h',fmt(h,1),'cm')+readItem('apotema a',fmt(apo),'cm')
+    +readItem('Volume',fmt(V),'cm³')+readItem('Sup. laterale',fmt(Sl),'cm²')
+    +readItem('Sup. totale',fmt(St),'cm²');
+  document.getElementById('tkName').textContent='Solido generato: TRONCO DI CONO (R = '+fmt(R,1)+' cm, r = '+fmt(r,1)+' cm)';
+}
+
+/* ============ CILINDRO + CONO (attorno alla base maggiore) ============ */
+function renderComposto(){
+  let B=+val('cpA'), bm=+val('cpB'), h=+val('cpH');
+  if(bm>=B) bm=B-0.5;            // la base minore deve essere < base maggiore
+  const Th=(+val('cpSw'))*PI/180, full=Th>=358*PI/180;
+  const r=h;                 // raggio comune = altezza del trapezio
+  const Hc=B;                // altezza totale del solido = base maggiore
+  const lc=bm;               // lunghezza cilindro = base minore
+  const sc=Math.min(92/r,190/Hc,42);
+  const bnd=[[0,0],[r,0],[r,lc],[0,Hc]];
+  let flat=axisLine(XF,YB-Hc*sc,YB)+flatPoly(XF,YB,sc,bnd)+rAngle(XF,YB,1,-1);
+  flat+=txt(XF-6,YB-Hc*sc/2,'base magg.',CO.b,'end',9,600);
+  flat+=txt(XF+r*sc/2,YB+15,'h = r',CO.r,'middle',11,700);
+  flat+=txt(XF+r*sc+6,YB-lc*sc/2,'base min.',CO.b,'start',9,600);
+  const prof=[[r*sc,0],[r*sc,lc*sc],[0,Hc*sc]];
+  const fig=[[0,0],[r*sc,0],[r*sc,lc*sc],[0,Hc*sc]];
+  let sol=defs('gCp')+axisLine(X3,YB-Hc*sc,YB);
+  sol+=`<g opacity="${full?1:0.22}">`+drawSolid3D(X3,YB,prof,'gCp')+'</g>';
+  if(!full) sol+=drawSweep3D(X3,YB,prof,fig,Th);
+  sol+=dline(X3,YB,X3+r*sc,YB,CO.r,'',2)+txt(X3+r*sc/2,YB+16,'r',CO.r,'middle',11,700);
+  sol+=txt(X3+r*sc+4,YB-lc*sc*0.5,'cilindro',CO.solidD,'start',9,600);
+  sol+=txt(X3+r*sc*0.4,YB-(lc+Hc)*sc*0.5,'cono',CO.solidD,'start',9,600);
+  document.getElementById('svgComposto').innerHTML=
+    txt(XF+10,18,'Figura generatrice','#6b7280','middle',11,700)
+    +txt(X3,18,'Solido di rotazione','#6b7280','middle',11,700)
+    +txt(218,150,'⟳',CO.axis,'middle',26,700)+flat+sol;
+  const Vcil=PI*r*r*lc, Vcono=PI*r*r*(B-bm)/3, V=Vcil+Vcono;
+  document.getElementById('cpRead').innerHTML=
+    readItem('raggio r = h',fmt(r,1),'cm')+readItem('cilindro alto',fmt(lc,1),'cm')
+    +readItem('cono alto (B−b)',fmt(B-bm,1),'cm')+readItem('Vol. cilindro',fmt(Vcil),'cm³')
+    +readItem('Vol. cono',fmt(Vcono),'cm³')+readItem('Volume totale',fmt(V),'cm³');
+  document.getElementById('cpName').textContent='Solido generato: CILINDRO + CONO';
 }
 
 /* ============ QUIZ DATA ============ */
@@ -756,12 +788,12 @@ cilindro:[
   opts:["lo stesso cilindro","un cilindro diverso (r = 5 cm, h = 3 cm)","un cono","una sfera"],ans:1,
   exp:"Raggio e altezza si scambiano: r = 5 cm, h = 3 cm. È un cilindro diverso, con volume maggiore (V = π·25·3 = 235,5 cm³)."}
 ],
-trapezio:[
+tronco:[
  {q:"Ruotando un trapezio rettangolo attorno all'altezza (il lato perpendicolare alle basi) si ottiene…",
   opts:["un cilindro","un cono","un tronco di cono","un bicono"],ans:2,
   exp:"Le due basi parallele tracciano due cerchi di raggio diverso: si genera un tronco di cono."},
- {q:"In questo caso, le due basi del trapezio diventano…",
-  opts:["le due altezze","i due raggi (maggiore e minore) del tronco","i due apotemi","le due circonferenze"],ans:1,
+ {q:"Le due basi parallele del trapezio diventano…",
+  opts:["le due altezze","i due raggi (maggiore R e minore r) del tronco","i due apotemi","le due circonferenze"],ans:1,
   exp:"La base maggiore diventa il raggio maggiore R, la base minore il raggio minore r."},
  {q:"L'altezza del trapezio rettangolo diventa…",
   opts:["l'apotema del tronco","l'altezza del tronco","il raggio maggiore","il raggio minore"],ans:1,
@@ -775,22 +807,54 @@ trapezio:[
  {q:"Trapezio rettangolo con base maggiore 6 cm, base minore 3 cm, altezza 4 cm: quanto vale l'apotema del tronco?",
   opts:["5 cm","7 cm","4 cm","3 cm"],ans:0,
   exp:"a = √(h²+(R−r)²) = √(16 + (6−3)²) = √(16+9) = √25 = 5 cm."},
+ {q:"Quale formula dà il volume del tronco di cono?",
+  opts:["V = π·h·(R² + r²)","V = ⅓·π·h·(R² + r² + R·r)","V = ⅓·π·h·R²","V = π·(R + r)·a"],ans:1,
+  exp:"Il volume del tronco è V = ⅓·π·h·(R² + r² + R·r)."},
  {q:"Volume del tronco con R = 6 cm, r = 3 cm, h = 4 cm. V = ⅓·π·h·(R²+r²+R·r), π ≈ 3,14.",
   opts:["263,76 cm³","791,28 cm³","141,3 cm³","452,16 cm³"],ans:0,
   exp:"R²+r²+R·r = 36+9+18 = 63; V = ⅓·3,14·4·63 = ⅓·791,28 ≈ 263,76 cm³."},
  {q:"Superficie laterale del tronco con R = 6 cm, r = 3 cm, apotema 5 cm. S = π·(R+r)·a, π ≈ 3,14.",
   opts:["141,3 cm²","94,2 cm²","47,1 cm²","282,6 cm²"],ans:0,
   exp:"S_laterale = π·(R+r)·a = 3,14·(6+3)·5 = 3,14·9·5 = 141,3 cm²."},
- {q:"Se invece il trapezio rettangolo ruota attorno alla base maggiore, si ottiene…",
-  opts:["un altro tronco di cono","un solido composto: un cilindro con sopra un cono","una sfera","due cilindri"],ans:1,
-  exp:"Ruotando attorno alla base maggiore si genera un cilindro (dalla base minore) sormontato da un cono (dal lato obliquo)."},
- {q:"In quel solido composto, il raggio comune di cilindro e cono è dato da…",
+ {q:"Il tronco di cono si può anche immaginare come…",
+  opts:["due coni uniti per la base","un cono grande a cui è stata tolta la punta (un cono piccolo)","un cilindro tagliato a metà","mezza sfera"],ans:1,
+  exp:"È un cono completo a cui si toglie la punta: «cono grande meno cono piccolo»."}
+],
+composto:[
+ {q:"Ruotando un trapezio rettangolo attorno alla base maggiore si ottiene…",
+  opts:["un tronco di cono","un solido composto: un cilindro con sopra un cono","una sfera","due cilindri uguali"],ans:1,
+  exp:"La base minore genera un cilindro, il lato obliquo un cono: insieme formano un solido composto."},
+ {q:"Perché in questa rotazione si forma anche un cono?",
+  opts:["Perché la base maggiore è curva","Perché il lato obliquo, ruotando, genera la superficie laterale di un cono","Perché l'altezza è inclinata","Perché il trapezio non è rettangolo"],ans:1,
+  exp:"Il lato obliquo del trapezio, ruotando attorno all'asse, descrive la superficie laterale di un cono."},
+ {q:"Nel solido composto, il raggio comune di cilindro e cono è dato da…",
   opts:["la base maggiore","la base minore","l'altezza del trapezio","il lato obliquo"],ans:2,
-  exp:"L'altezza del trapezio diventa il raggio. Il cilindro è alto come la base minore, il cono come la differenza delle basi (B − b)."}
+  exp:"L'altezza del trapezio (perpendicolare alle basi) diventa il raggio comune di cilindro e cono."},
+ {q:"La parte cilindrica del solido è alta quanto…",
+  opts:["la base minore","la base maggiore","l'altezza del trapezio","il lato obliquo"],ans:0,
+  exp:"Il tratto in cui il trapezio ha larghezza costante è lungo come la base minore: lì si forma il cilindro."},
+ {q:"La parte conica è alta quanto…",
+  opts:["la base minore","la differenza tra le basi (B − b)","l'altezza del trapezio","l'intera base maggiore"],ans:1,
+  exp:"Il cono si estende per il tratto restante: la differenza tra base maggiore e base minore, B − b."},
+ {q:"Trapezio: base maggiore 6 cm, base minore 3 cm, altezza 4 cm. Quanto vale il raggio del solido?",
+  opts:["6 cm","3 cm","4 cm","2 cm"],ans:2,
+  exp:"Il raggio è l'altezza del trapezio: r = 4 cm."},
+ {q:"Stesso trapezio (B = 6, b = 3, h = 4): quanto sono alti cilindro e cono?",
+  opts:["cilindro 3 cm, cono 3 cm","cilindro 6 cm, cono 3 cm","cilindro 4 cm, cono 4 cm","cilindro 3 cm, cono 6 cm"],ans:0,
+  exp:"Cilindro alto come la base minore (3 cm); cono alto come B − b = 6 − 3 = 3 cm."},
+ {q:"Volume della parte cilindrica (r = 4 cm, alta 3 cm). V = π·r²·b, π ≈ 3,14.",
+  opts:["150,72 cm³","50,24 cm³","37,68 cm³","200,96 cm³"],ans:0,
+  exp:"V_cilindro = π·r²·b = 3,14·16·3 = 150,72 cm³."},
+ {q:"Volume della parte conica (r = 4 cm, alta 3 cm). V = ⅓·π·r²·(B−b), π ≈ 3,14.",
+  opts:["150,72 cm³","50,24 cm³","100,48 cm³","16,75 cm³"],ans:1,
+  exp:"V_cono = ⅓·π·r²·(B−b) = ⅓·3,14·16·3 = ⅓·150,72 = 50,24 cm³."},
+ {q:"Volume totale del solido composto (cilindro 150,72 cm³ + cono 50,24 cm³)?",
+  opts:["100,48 cm³","200,96 cm³","301,44 cm³","251,2 cm³"],ans:1,
+  exp:"Il volume del composto è la somma: 150,72 + 50,24 = 200,96 cm³."}
 ]};
 
 /* ============ QUIZ ENGINE ============ */
-const QSECTIONS=['cono','bicono','cilindro','trapezio'];
+const QSECTIONS=['cono','bicono','cilindro','tronco','composto'];
 const qState={};
 QSECTIONS.forEach(s=>{qState[s]={idx:0,score:0,answered:false,done:false};});
 
@@ -853,14 +917,16 @@ function restartQuiz(s){
 ['coA','coB','coAxis','coSw'].forEach(id=>document.getElementById(id).addEventListener('input',renderCono));
 ['biA','biB','biSw'].forEach(id=>document.getElementById(id).addEventListener('input',renderBicono));
 ['ciA','ciB','ciAxis','ciSw'].forEach(id=>document.getElementById(id).addEventListener('input',renderCilindro));
-['trMode','trA','trB','trH','trSw'].forEach(id=>document.getElementById(id).addEventListener('input',renderTrapezio));
+['tkA','tkB','tkH','tkSw'].forEach(id=>document.getElementById(id).addEventListener('input',renderTronco));
+['cpA','cpB','cpH','cpSw'].forEach(id=>document.getElementById(id).addEventListener('input',renderComposto));
 
 const fmt1=v=>fmt(v,1)+' cm';
 const fmtA=v=>v>=358?'360°':(v+'°');
 bindRange('coA','coAv',fmt1); bindRange('coB','coBv',fmt1); bindRange('coSw','coSwv',fmtA);
 bindRange('biA','biAv',fmt1); bindRange('biB','biBv',fmt1); bindRange('biSw','biSwv',fmtA);
 bindRange('ciA','ciAv',fmt1); bindRange('ciB','ciBv',fmt1); bindRange('ciSw','ciSwv',fmtA);
-bindRange('trA','trAv',fmt1); bindRange('trB','trBv',fmt1); bindRange('trH','trHv',fmt1); bindRange('trSw','trSwv',fmtA);
+bindRange('tkA','tkAv',fmt1); bindRange('tkB','tkBv',fmt1); bindRange('tkH','tkHv',fmt1); bindRange('tkSw','tkSwv',fmtA);
+bindRange('cpA','cpAv',fmt1); bindRange('cpB','cpBv',fmt1); bindRange('cpH','cpHv',fmt1); bindRange('cpSw','cpSwv',fmtA);
 
 QSECTIONS.forEach(renderQuiz);
 
@@ -872,7 +938,7 @@ new ResizeObserver(_updateNavTop).observe(_hdr);
 _updateNavTop();
 
 /* ----- Initial render ----- */
-renderCono(); renderBicono(); renderCilindro(); renderTrapezio();
+renderCono(); renderBicono(); renderCilindro(); renderTronco(); renderComposto();
 </script>
 </body>
 </html>
