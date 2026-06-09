@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Solidi di rotazione · Geometria</title>
+<style>
+:root{
+  --bg:#f6f7fb;--surface:#fff;--surface2:#f8f9fc;
+  --primary:#4f46e5;--primary-d:#3730a3;--primary-l:#eef0fd;
+  --text:#1c1d2b;--muted:#6b7280;--border:#e2e5ef;
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  font-size:clamp(15px,2.3vw,16.5px);line-height:1.6}
+
+/* ===== Header ===== */
+header{background:var(--surface);border-bottom:1px solid var(--border);
+  padding:.7rem 1rem;position:sticky;top:0;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem}
+header h1{font-size:clamp(1.02rem,3.6vw,1.32rem);color:var(--text);
+  font-weight:700;letter-spacing:-.01em}
+.btn-print{background:var(--surface2);border:1px solid var(--border);
+  color:var(--primary-d);border-radius:8px;padding:.4rem .8rem;font-size:.82em;
+  cursor:pointer;font-family:inherit;font-weight:600;transition:background .15s,border-color .15s;white-space:nowrap}
+.btn-print:hover{background:var(--primary-l);border-color:var(--primary)}
+
+/* ===== Nav ===== */
+nav.main{background:var(--surface);border-bottom:1px solid var(--border);
+  position:sticky;z-index:5;overflow-x:auto;display:flex;gap:.35rem;
+  padding:.5rem .7rem;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+nav.main button{flex:0 0 auto;background:var(--surface2);border:1px solid var(--border);
+  border-radius:999px;padding:.4rem .85rem;font-size:.84em;color:var(--muted);
+  cursor:pointer;white-space:nowrap;font-family:inherit;min-height:36px;
+  transition:background .15s,border-color .15s,color .15s}
+nav.main button:hover:not(.active){background:var(--primary-l);color:var(--text)}
+nav.main button.active{background:var(--primary);border-color:var(--primary);
+  color:#fff;font-weight:600}
+
+/* ===== Layout ===== */
+main{padding:1.1rem 1rem 2.5rem;max-width:980px;margin:0 auto}
+section.scene{display:none}
+section.scene.active{display:block}
+.sec-label{font-size:.71em;font-weight:700;letter-spacing:.09em;
+  color:var(--muted);text-transform:uppercase;margin:.1rem 0 .4rem}
+
+/* ===== Cards ===== */
+.card{background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.15rem 1.2rem;margin-bottom:1.1rem;
+  box-shadow:0 1px 2px rgba(20,30,60,.04)}
+.card h2{margin:0 0 .55rem;color:var(--text);font-size:1.14em;font-weight:700;
+  letter-spacing:-.01em}
+.card h3{margin:.9rem 0 .3rem;color:var(--primary-d);font-size:.97em;font-weight:600}
+.card p{margin:.35rem 0;color:var(--text)}
+.lead{color:var(--muted);font-size:.92em;margin:.1rem 0 .7rem}
+.corr{list-style:none;margin:.4rem 0;padding:0;display:grid;gap:.3rem}
+.corr li{background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  padding:.4rem .65rem;font-size:.9em;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.corr li b{color:var(--primary-d)}
+.corr li .ar{color:var(--muted);font-weight:700}
+
+/* ===== Formulas ===== */
+.formula{background:var(--primary-l);border-left:3px solid var(--primary);
+  padding:.6rem .9rem;margin:.5rem 0;border-radius:0 8px 8px 0;
+  font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:1.05em;
+  overflow-x:auto;white-space:nowrap;line-height:1.9}
+.tip{background:#eaf6ec;border-left:3px solid #2e7d32;padding:.5rem .9rem;
+  margin:.55rem 0;border-radius:0 8px 8px 0;font-size:.9em}
+.warn{background:#fef6e6;border-left:3px solid #f9a825;padding:.5rem .9rem;
+  margin:.55rem 0;border-radius:0 8px 8px 0;font-size:.9em}
+
+/* ===== Simulation 2-column ===== */
+.sim-layout{display:grid;grid-template-columns:1.15fr 1fr;gap:1.15rem;align-items:start}
+@media(max-width:720px){.sim-layout{grid-template-columns:1fr}}
+.sim-pane,.ctrl-pane{min-width:0}
+
+/* ===== Controls ===== */
+.ctrl{display:grid;gap:.55rem;margin:0 0 .7rem}
+.ctrl label{display:flex;align-items:center;gap:.6rem;font-size:.89em}
+.ctrl label .nm{color:var(--muted);min-width:7em;font-size:.92em}
+.ctrl label input[type=range]{flex:1;min-width:0;min-height:26px;accent-color:var(--primary)}
+.ctrl label .v{min-width:4.2em;text-align:right;font-weight:700;
+  color:var(--primary-d);font-variant-numeric:tabular-nums;font-size:.95em}
+.ctrl select{padding:.42rem .6rem;border:1px solid var(--border);border-radius:8px;
+  font-size:.93em;background:var(--surface);width:100%;color:var(--text);font-family:inherit}
+
+/* ===== Readouts ===== */
+.read{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));
+  gap:.42rem;margin:.55rem 0;font-size:.86em}
+.read .it{background:var(--surface2);padding:.42rem .58rem;border-radius:8px;
+  border:1px solid var(--border)}
+.read .it .l{color:var(--muted);font-size:.77em;display:block;margin-bottom:.12rem}
+.read .it .v{font-weight:700;font-variant-numeric:tabular-nums;color:var(--text)}
+
+/* ===== Solid name badge ===== */
+.solidname{text-align:center;font-weight:700;padding:.5rem;border-radius:8px;
+  margin-top:.55rem;font-size:.92em;background:#e0f2fe;color:#075985;border:1px solid #bae6fd}
+
+/* ===== SVG ===== */
+svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border);
+  border-radius:8px;display:block;font-family:sans-serif}
+
+/* ===== Home grid ===== */
+.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}
+.home-card{background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:.95rem 1rem;cursor:pointer;text-align:left;
+  font-size:1em;font-family:inherit;color:inherit;
+  box-shadow:0 1px 2px rgba(20,30,60,.04);
+  transition:border-color .18s,box-shadow .18s,transform .14s}
+.home-card:hover{border-color:var(--primary);
+  box-shadow:0 4px 14px rgba(79,70,229,.13);transform:translateY(-2px)}
+.home-card .ico{font-size:1.7em;display:block;margin-bottom:.32rem}
+.home-card strong{color:var(--primary-d);display:block;margin-bottom:.12rem;font-size:.97em}
+.home-card span{color:var(--muted);font-size:.85em}
+
+/* ===== Quiz ===== */
+.quiz-hd{display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:.45rem;font-size:.83em}
+.quiz-bar-wrap{background:#e3e7ef;border-radius:999px;height:6px;
+  margin-bottom:.9rem;overflow:hidden}
+.quiz-bar-fill{background:var(--primary);height:100%;border-radius:999px;
+  transition:width .4s cubic-bezier(.4,0,.2,1)}
+.quiz-q{font-weight:600;margin:.2rem 0 .75rem;line-height:1.45;font-size:.95em}
+.quiz-opts{display:grid;gap:.38rem;margin-bottom:.45rem}
+.quiz-btn{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;
+  padding:.5rem .85rem;text-align:left;cursor:pointer;font-size:.87em;
+  font-family:inherit;color:var(--text);line-height:1.38;
+  transition:background .12s,border-color .12s}
+.quiz-btn:not(:disabled):hover{background:var(--primary-l);border-color:var(--primary)}
+.quiz-btn:disabled{cursor:default}
+.quiz-btn.correct{background:#d4edd6!important;border-color:#388e3c!important;
+  color:#1b5e20;font-weight:600}
+.quiz-btn.wrong{background:#fbd8d8!important;border-color:#c62828!important;color:#b71c1c}
+.quiz-exp{padding:.52rem .85rem;border-radius:8px;font-size:.85em;
+  line-height:1.5;margin:.45rem 0}
+.quiz-exp.ok{background:#eaf6ec;border-left:3px solid #388e3c;color:#1b5e20}
+.quiz-exp.no{background:#fdeaea;border-left:3px solid #c62828;color:#b71c1c}
+.quiz-next,.quiz-restart{background:var(--primary);color:#fff;border:0;border-radius:8px;
+  padding:.46rem 1.15rem;font-size:.87em;cursor:pointer;font-family:inherit;
+  transition:background .15s}
+.quiz-next{margin-top:.25rem}
+.quiz-next:hover,.quiz-restart:hover{background:var(--primary-d)}
+.quiz-done{text-align:center;padding:.7rem 0}
+.quiz-score-big{font-size:2.2em;font-weight:800;color:var(--primary-d);
+  display:block;margin-bottom:.25rem}
+.quiz-msg{color:var(--muted);margin:.15rem 0 .8rem;font-size:.92em}
+
+@media(max-width:520px){
+  main{padding:.8rem .7rem 2rem}
+  .card{padding:.9rem .95rem}
+  .ctrl label .nm{min-width:5.6em}
+}
+
+/* ===== PRINT MODE ===== */
+.print-only{display:none}
+@media print{
+  nav.main,.btn-print,.sim-block,.quiz-block,.home-grid{display:none!important}
+  header{position:static;border-bottom:2px solid #000;padding:.4rem 0}
+  header h1{font-size:1.3rem}
+  html,body{background:#fff;font-size:11pt}
+  main{max-width:100%;padding:0}
+  section.scene{display:block!important;page-break-inside:auto}
+  section.scene::before{content:attr(data-title);display:block;
+    font-size:1.25em;font-weight:800;color:#000;margin:1.1rem 0 .4rem;
+    border-bottom:1.5px solid #000;padding-bottom:.2rem}
+  section.scene#home::before{content:none}
+  .card{box-shadow:none;border:1px solid #ccc;break-inside:avoid;margin-bottom:.7rem}
+  .formula{background:#f1f1f1;border-left:3px solid #444}
+  .print-only{display:block}
+  .lead{display:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>🔄 Solidi di rotazione</h1>
+  <button class="btn-print" onclick="window.print()">🖨️ Stampa teoria</button>
+</header>
+<nav class="main" id="mainNav">
+  <button data-tab="home" class="active">🏠 Home</button>
+  <button data-tab="cono">🔺 Cono</button>
+  <button data-tab="bicono">⏳ Bicono</button>
+  <button data-tab="cilindro">🟦 Cilindro</button>
+  <button data-tab="trapezio">🪣 Trapezio</button>
+</nav>
+<main>
+
+<!-- ============ HOME ============ -->
+<section class="scene active" id="home" data-title="Solidi di rotazione">
+  <div class="card">
+    <h2>Che cos'è un solido di rotazione?</h2>
+    <p>Quando una <strong>figura piana</strong> compie un <strong>giro completo</strong> (360°) attorno a una retta fissa, detta <strong>asse di rotazione</strong>, "spazza" lo spazio e genera un <strong>solido di rotazione</strong>.</p>
+    <div class="formula">figura piana &nbsp;+&nbsp; asse &nbsp;+&nbsp; giro di 360° &nbsp;⟶&nbsp; solido</div>
+    <p>Cambiando la <em>figura</em> oppure l'<em>asse</em> attorno a cui ruota, si ottengono solidi diversi: <strong>cono</strong>, <strong>cilindro</strong>, <strong>tronco di cono</strong> e altri.</p>
+    <div class="tip">💡 In ogni argomento trovi una simulazione: trascina il cursore <strong>«rotazione»</strong> e guarda la figura piana girare attorno all'asse fino a formare il solido. Poi metti alla prova con i 10 quiz.</div>
+    <div class="warn">📐 La simulazione calcola volumi e superfici con un π molto preciso; nei quiz si usa invece <strong>π ≈ 3,14</strong>, perciò puoi trovare piccole differenze negli ultimi decimali.</div>
+  </div>
+  <p class="sec-label">Argomenti</p>
+  <div class="home-grid">
+    <button class="home-card" data-go="cono"><span class="ico">🔺</span><strong>Cono</strong><span>Triangolo rettangolo attorno a un cateto</span></button>
+    <button class="home-card" data-go="bicono"><span class="ico">⏳</span><strong>Bicono</strong><span>Triangolo rettangolo attorno all'ipotenusa</span></button>
+    <button class="home-card" data-go="cilindro"><span class="ico">🟦</span><strong>Cilindro</strong><span>Rettangolo attorno a un lato</span></button>
+    <button class="home-card" data-go="trapezio"><span class="ico">🪣</span><strong>Trapezio</strong><span>Tronco di cono e solidi composti</span></button>
+  </div>
+</section>
+
+<!-- ============ CONO ============ -->
+<section class="scene" id="cono" data-title="Cono — triangolo rettangolo attorno a un cateto">
+  <p class="sec-label">Teoria</p>
+  <div class="card">
+    <h2>🔺 Il cono</h2>
+    <p>Un <strong>triangolo rettangolo</strong> che ruota di un giro completo attorno a uno dei suoi <strong>cateti</strong> genera un <strong>cono</strong>.</p>
+    <ul class="corr">
+      <li><b>cateto–asse</b> <span class="ar">→</span> diventa l'<b>altezza</b> h del cono</li>
+      <li><b>altro cateto</b> <span class="ar">→</span> diventa il <b>raggio</b> r di base</li>
+      <li><b>ipotenusa</b> <span class="ar">→</span> diventa l'<b>apotema</b> a (il lato) del cono</li>
+    </ul>
+    <p>Poiché il triangolo è rettangolo, vale il teorema di Pitagora tra apotema, raggio e altezza:</p>
+    <div class="formula">a² = r² + h² &nbsp;&nbsp;⇒&nbsp;&nbsp; a = √(r² + h²)</div>
+    <h3>Volume e superfici</h3>
+    <div class="formula">V = ⅓ · π · r² · h</div>
+    <div class="formula">S<sub>laterale</sub> = π · r · a &nbsp;·&nbsp; S<sub>base</sub> = π · r²</div>
+    <div class="formula">S<sub>totale</sub> = π · r · (r + a)</div>
+    <div class="tip">🔁 Se lo stesso triangolo ruota attorno all'<em>altro</em> cateto, raggio e altezza si scambiano: si ottiene un cono <strong>diverso</strong> (ma con la stessa apotema, perché l'ipotenusa non cambia).</div>
+  </div>
+  <p class="sec-label">Simulazione</p>
+  <div class="card sim-block">
+    <p class="lead">Regola i due cateti e scegli l'asse di rotazione. Trascina «rotazione» per veder ruotare il triangolo e generare il cono.</p>
+    <div class="sim-layout">
+      <div class="sim-pane">
+        <svg class="sim" id="svgCono" viewBox="0 0 470 300" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="ctrl-pane">
+        <div class="ctrl">
+          <label><span class="nm">cateto c₁</span><input type="range" id="coA" min="1" max="10" step="0.5" value="4"><span class="v" id="coAv">4</span></label>
+          <label><span class="nm">cateto c₂</span><input type="range" id="coB" min="1" max="10" step="0.5" value="3"><span class="v" id="coBv">3</span></label>
+          <label><span class="nm">asse di rotazione</span>
+            <select id="coAxis"><option value="a">cateto c₁</option><option value="b">cateto c₂</option></select>
+          </label>
+          <label><span class="nm">rotazione</span><input type="range" id="coSw" min="0" max="360" step="2" value="360"><span class="v" id="coSwv">360°</span></label>
+        </div>
+        <div class="read" id="coRead"></div>
+        <div class="solidname" id="coName">Solido generato: cono</div>
+      </div>
+    </div>
+  </div>
+  <div id="qz-cono" class="quiz-block"></div>
+</section>
+
+<!-- ============ BICONO ============ -->
+<section class="scene" id="bicono" data-title="Bicono — triangolo rettangolo attorno all'ipotenusa">
+  <p class="sec-label">Teoria</p>
+  <div class="card">
+    <h2>⏳ Il bicono (doppio cono)</h2>
+    <p>Se il triangolo rettangolo ruota attorno alla sua <strong>ipotenusa</strong>, genera <strong>due coni uniti per la base</strong>: un solido chiamato <strong>bicono</strong> (o doppio cono).</p>
+    <ul class="corr">
+      <li><b>ipotenusa i</b> <span class="ar">→</span> è l'<b>asse</b>; le due "altezze" dei coni sono le proiezioni dei cateti e la loro somma è i</li>
+      <li><b>altezza relativa all'ipotenusa</b> <span class="ar">→</span> è il <b>raggio comune</b> r delle due basi</li>
+      <li><b>ogni cateto</b> <span class="ar">→</span> è l'<b>apotema</b> del cono corrispondente</li>
+    </ul>
+    <p>Il raggio comune si ricava dall'<strong>equivalenza delle aree</strong>: l'area del triangolo si può scrivere in due modi.</p>
+    <div class="formula">½ · c₁ · c₂ = ½ · i · r &nbsp;&nbsp;⇒&nbsp;&nbsp; r = (c₁ · c₂) / i</div>
+    <h3>Volume e superficie</h3>
+    <div class="formula">V = ⅓ · π · r² · i</div>
+    <div class="formula">S = π · r · c₁ + π · r · c₂ = π · r · (c₁ + c₂)</div>
+    <div class="warn">⚠️ Le basi dei due coni <strong>coincidono</strong>: sono interne al solido, quindi <em>non</em> si contano nella superficie. Restano solo le due superfici laterali.</div>
+  </div>
+  <p class="sec-label">Simulazione</p>
+  <div class="card sim-block">
+    <p class="lead">L'asse è l'ipotenusa. Il vertice con l'angolo retto traccia, ruotando, la base circolare comune dei due coni.</p>
+    <div class="sim-layout">
+      <div class="sim-pane">
+        <svg class="sim" id="svgBicono" viewBox="0 0 470 300" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="ctrl-pane">
+        <div class="ctrl">
+          <label><span class="nm">cateto c₁</span><input type="range" id="biA" min="1" max="10" step="0.5" value="3"><span class="v" id="biAv">3</span></label>
+          <label><span class="nm">cateto c₂</span><input type="range" id="biB" min="1" max="10" step="0.5" value="4"><span class="v" id="biBv">4</span></label>
+          <label><span class="nm">rotazione</span><input type="range" id="biSw" min="0" max="360" step="2" value="360"><span class="v" id="biSwv">360°</span></label>
+        </div>
+        <div class="read" id="biRead"></div>
+        <div class="solidname" id="biName">Solido generato: bicono</div>
+      </div>
+    </div>
+  </div>
+  <div id="qz-bicono" class="quiz-block"></div>
+</section>
+
+<!-- ============ CILINDRO ============ -->
+<section class="scene" id="cilindro" data-title="Cilindro — rettangolo attorno a un lato">
+  <p class="sec-label">Teoria</p>
+  <div class="card">
+    <h2>🟦 Il cilindro</h2>
+    <p>Un <strong>rettangolo</strong> che ruota di un giro completo attorno a uno dei suoi <strong>lati</strong> genera un <strong>cilindro</strong>.</p>
+    <ul class="corr">
+      <li><b>lato–asse</b> <span class="ar">→</span> diventa l'<b>altezza</b> h del cilindro</li>
+      <li><b>lato perpendicolare all'asse</b> <span class="ar">→</span> diventa il <b>raggio</b> r di base</li>
+    </ul>
+    <p>Il cilindro ha <strong>due basi</strong> circolari uguali. La sua superficie laterale, "srotolata", è un <strong>rettangolo</strong> con base 2πr (la circonferenza) e altezza h.</p>
+    <h3>Volume e superfici</h3>
+    <div class="formula">V = π · r² · h</div>
+    <div class="formula">S<sub>laterale</sub> = 2 · π · r · h &nbsp;·&nbsp; S<sub>base</sub> = π · r²</div>
+    <div class="formula">S<sub>totale</sub> = 2 · π · r · (r + h)</div>
+    <div class="tip">🔁 Ruotando lo stesso rettangolo attorno all'<em>altro</em> lato, raggio e altezza si scambiano: si ottiene un cilindro diverso, in generale con volume diverso.</div>
+  </div>
+  <p class="sec-label">Simulazione</p>
+  <div class="card sim-block">
+    <p class="lead">Regola i due lati del rettangolo e scegli l'asse. Trascina «rotazione» per generare il cilindro.</p>
+    <div class="sim-layout">
+      <div class="sim-pane">
+        <svg class="sim" id="svgCilindro" viewBox="0 0 470 300" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="ctrl-pane">
+        <div class="ctrl">
+          <label><span class="nm">lato ℓ₁</span><input type="range" id="ciA" min="1" max="10" step="0.5" value="5"><span class="v" id="ciAv">5</span></label>
+          <label><span class="nm">lato ℓ₂</span><input type="range" id="ciB" min="1" max="10" step="0.5" value="3"><span class="v" id="ciBv">3</span></label>
+          <label><span class="nm">asse di rotazione</span>
+            <select id="ciAxis"><option value="a">lato ℓ₁</option><option value="b">lato ℓ₂</option></select>
+          </label>
+          <label><span class="nm">rotazione</span><input type="range" id="ciSw" min="0" max="360" step="2" value="360"><span class="v" id="ciSwv">360°</span></label>
+        </div>
+        <div class="read" id="ciRead"></div>
+        <div class="solidname" id="ciName">Solido generato: cilindro</div>
+      </div>
+    </div>
+  </div>
+  <div id="qz-cilindro" class="quiz-block"></div>
+</section>
+
+<!-- ============ TRAPEZIO ============ -->
+<section class="scene" id="trapezio" data-title="Trapezio — tronco di cono e solidi composti">
+  <p class="sec-label">Teoria</p>
+  <div class="card">
+    <h2>🪣 Dal trapezio: tronco di cono e solidi composti</h2>
+    <h3>(a) Attorno all'altezza → tronco di cono</h3>
+    <p>Un <strong>trapezio rettangolo</strong> che ruota attorno al lato <strong>perpendicolare alle basi</strong> (l'altezza) genera un <strong>tronco di cono</strong>.</p>
+    <ul class="corr">
+      <li><b>base maggiore</b> <span class="ar">→</span> <b>raggio maggiore</b> R</li>
+      <li><b>base minore</b> <span class="ar">→</span> <b>raggio minore</b> r</li>
+      <li><b>altezza</b> <span class="ar">→</span> <b>altezza</b> h del tronco</li>
+      <li><b>lato obliquo</b> <span class="ar">→</span> <b>apotema</b> a del tronco</li>
+    </ul>
+    <div class="formula">a = √(h² + (R − r)²)</div>
+    <div class="formula">V = ⅓ · π · h · (R² + r² + R·r)</div>
+    <div class="formula">S<sub>laterale</sub> = π · (R + r) · a &nbsp;·&nbsp; S<sub>basi</sub> = π·R² + π·r²</div>
+    <h3>(b) Attorno a una base → solido composto</h3>
+    <p>Se invece il trapezio rettangolo ruota attorno alla <strong>base maggiore</strong>, si ottiene un <strong>solido composto</strong>: un <strong>cilindro</strong> con sopra un <strong>cono</strong>.</p>
+    <ul class="corr">
+      <li><b>altezza del trapezio</b> <span class="ar">→</span> <b>raggio comune</b> di cilindro e cono</li>
+      <li><b>base minore</b> <span class="ar">→</span> altezza del <b>cilindro</b></li>
+      <li><b>differenza delle basi</b> (B − b) <span class="ar">→</span> altezza del <b>cono</b></li>
+    </ul>
+    <div class="formula">V = π·r²·b<sub>min</sub> + ⅓·π·r²·(B − b<sub>min</sub>)</div>
+    <div class="tip">💡 Il tronco di cono si può anche immaginare come un <strong>«cono grande meno cono piccolo»</strong>: il cono completo a cui è stata tolta la punta.</div>
+  </div>
+  <p class="sec-label">Simulazione</p>
+  <div class="card sim-block">
+    <p class="lead">Scegli che cosa generare, regola le misure del trapezio e trascina «rotazione».</p>
+    <div class="sim-layout">
+      <div class="sim-pane">
+        <svg class="sim" id="svgTrapezio" viewBox="0 0 470 300" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="ctrl-pane">
+        <div class="ctrl">
+          <label><span class="nm">tipo di rotazione</span>
+            <select id="trMode">
+              <option value="tronco">attorno all'altezza → tronco di cono</option>
+              <option value="comp">attorno alla base magg. → cilindro + cono</option>
+            </select>
+          </label>
+          <label><span class="nm">base maggiore</span><input type="range" id="trA" min="2" max="12" step="0.5" value="6"><span class="v" id="trAv">6</span></label>
+          <label><span class="nm">base minore</span><input type="range" id="trB" min="1" max="11" step="0.5" value="3"><span class="v" id="trBv">3</span></label>
+          <label><span class="nm">altezza</span><input type="range" id="trH" min="1" max="10" step="0.5" value="4"><span class="v" id="trHv">4</span></label>
+          <label><span class="nm">rotazione</span><input type="range" id="trSw" min="0" max="360" step="2" value="360"><span class="v" id="trSwv">360°</span></label>
+        </div>
+        <div class="read" id="trRead"></div>
+        <div class="solidname" id="trName">Solido generato: tronco di cono</div>
+      </div>
+    </div>
+  </div>
+  <div id="qz-trapezio" class="quiz-block"></div>
+</section>
+
+</main>
+<script>
+"use strict";
+const PI=Math.PI;
+const CO={axis:'#64748b',fig:'#f59e0b',figF:'rgba(245,158,11,.20)',
+  solid:'#0ea5e9',solidD:'#0369a1',topFace:'#e0f2fe',
+  r:'#e11d48',h:'#16a34a',a:'#7c3aed',b:'#0891b2'};
+const K=0.34;  // schiacciamento delle ellissi (vista prospettica)
+
+/* ===== Helpers ===== */
+function val(id){return document.getElementById(id).value;}
+function fmt(x,d){d=(d==null?2:d);return (x).toFixed(d).replace('.',',');}
+function txt(x,y,t,c,anchor,size,weight){
+  return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" fill="${c}" font-size="${size||11}" font-weight="${weight||600}" text-anchor="${anchor||'middle'}">${t}</text>`;
+}
+function dline(x1,y1,x2,y2,c,dash,w){
+  return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${c}" stroke-width="${w||1.4}"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+}
+function ell(cx,cy,rx,fill,stroke){
+  const ry=rx*K;
+  return `<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="${fill}" stroke="${stroke}" stroke-width="1.6"/>`;
+}
+function arcFront(cx,cy,rx,stroke){
+  const ry=rx*K;
+  return `<path d="M ${(cx-rx).toFixed(1)} ${cy.toFixed(1)} A ${rx.toFixed(1)} ${ry.toFixed(1)} 0 0 0 ${(cx+rx).toFixed(1)} ${cy.toFixed(1)}" fill="none" stroke="${stroke}" stroke-width="2"/>`;
+}
+function arcBack(cx,cy,rx,stroke){
+  const ry=rx*K;
+  return `<path d="M ${(cx-rx).toFixed(1)} ${cy.toFixed(1)} A ${rx.toFixed(1)} ${ry.toFixed(1)} 0 0 1 ${(cx+rx).toFixed(1)} ${cy.toFixed(1)}" fill="none" stroke="${stroke}" stroke-width="1.1" stroke-dasharray="4 3" opacity="0.7"/>`;
+}
+function defs(id){
+  return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#38bdf8"/><stop offset="0.5" stop-color="#e0f2fe"/><stop offset="1" stop-color="#7dd3fc"/></linearGradient></defs>`;
+}
+function flatPoly(xa,yb,sc,bnd){
+  let d=bnd.map((p,i)=>(i?'L':'M')+(xa+p[0]*sc).toFixed(1)+' '+(yb-p[1]*sc).toFixed(1)).join(' ')+' Z';
+  return `<path d="${d}" fill="${CO.figF}" stroke="${CO.fig}" stroke-width="2" stroke-linejoin="round"/>`;
+}
+function rAngle(x,y,dx,dy,d){
+  d=d||8;
+  return `<path d="M ${(x+dx*d).toFixed(1)} ${y.toFixed(1)} L ${(x+dx*d).toFixed(1)} ${(y+dy*d).toFixed(1)} L ${x.toFixed(1)} ${(y+dy*d).toFixed(1)}" fill="none" stroke="${CO.axis}" stroke-width="1.2"/>`;
+}
+function axisLine(x,yTop,yBot){
+  return dline(x,yTop-16,x,yBot+16,CO.axis,'6 5',1.5)+txt(x,yTop-20,'asse',CO.axis,'middle',10,600);
+}
+/* projection of a point (radius r, height h above base, angle phi) onto screen */
+function P3(AX,BASEY,r,h,phi){return [AX+r*Math.cos(phi), BASEY-h+r*K*Math.sin(phi)];}
+
+/* full pseudo-3D solid from a profile (bottom->top, [radius_px, height_px]) */
+function drawSolid3D(AX,BASEY,prof,gradId){
+  const n=prof.length;
+  const Rp=prof.map(p=>[AX+p[0],BASEY-p[1]]);
+  const Lp=prof.map(p=>[AX-p[0],BASEY-p[1]]);
+  const rBot=prof[0][0], rTop=prof[n-1][0];
+  let d=`M ${Rp[0][0].toFixed(1)} ${Rp[0][1].toFixed(1)} `;
+  for(let i=1;i<n;i++) d+=`L ${Rp[i][0].toFixed(1)} ${Rp[i][1].toFixed(1)} `;
+  d+=`L ${Lp[n-1][0].toFixed(1)} ${Lp[n-1][1].toFixed(1)} `;
+  for(let i=n-2;i>=0;i--) d+=`L ${Lp[i][0].toFixed(1)} ${Lp[i][1].toFixed(1)} `;
+  if(rBot>0.5){const ry=rBot*K; d+=`A ${rBot.toFixed(1)} ${ry.toFixed(1)} 0 0 0 ${Rp[0][0].toFixed(1)} ${Rp[0][1].toFixed(1)} `;}
+  d+='Z';
+  let s=`<path d="${d}" fill="url(#${gradId})" stroke="${CO.solidD}" stroke-width="1.6" stroke-linejoin="round"/>`;
+  if(rBot>0.5){const cy=BASEY-prof[0][1]; s+=arcBack(AX,cy,rBot,CO.solidD)+arcFront(AX,cy,rBot,CO.solidD);}
+  for(let i=1;i<n-1;i++){ if(prof[i][0]>0.5){const cy=BASEY-prof[i][1]; s+=arcBack(AX,cy,prof[i][0],CO.solidD)+arcFront(AX,cy,prof[i][0],CO.solidD);} }
+  if(rTop>0.5){const cy=BASEY-prof[n-1][1]; s+=ell(AX,cy,rTop,CO.topFace,CO.solidD);}
+  return s;
+}
+/* sweeping wireframe + moving generating figure (angle Th in rad) */
+function drawSweep3D(AX,BASEY,prof,fig,Th){
+  let s='';
+  const steps=Math.max(2,Math.round(Th/(PI/14)));
+  for(let k=0;k<=steps;k++){
+    const phi=Th*k/steps; let d='';
+    prof.forEach((p,i)=>{const q=P3(AX,BASEY,p[0],p[1],phi); d+=(i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1)+' ';});
+    s+=`<path d="${d}" fill="none" stroke="${CO.solid}" stroke-width="1" opacity="0.5"/>`;
+  }
+  let df='';
+  fig.forEach((p,i)=>{const q=P3(AX,BASEY,p[0],p[1],Th); df+=(i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1)+' ';});
+  df+='Z';
+  s+=`<path d="${df}" fill="${CO.figF}" stroke="${CO.fig}" stroke-width="2" stroke-linejoin="round"/>`;
+  return s;
+}
+function readItem(l,v,u){return `<div class="it"><span class="l">${l}</span><span class="v">${v}</span>${u?' '+u:''}</div>`;}
+
+/* ===== Tab navigation ===== */
+const navBtns=document.querySelectorAll('#mainNav button');
+const scenes=document.querySelectorAll('section.scene');
+function showTab(name){
+  navBtns.forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+  scenes.forEach(s=>s.classList.toggle('active', s.id===name));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+navBtns.forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+document.querySelectorAll('.home-card').forEach(c=>c.addEventListener('click',()=>showTab(c.dataset.go)));
+
+/* ===== Slider value bind ===== */
+function bindRange(id,valId,fmtFn){
+  const el=document.getElementById(id), out=document.getElementById(valId);
+  if(!el||!out) return el;
+  const upd=()=>{out.textContent=fmtFn?fmtFn(+el.value):el.value;};
+  el.addEventListener('input',upd); upd();
+  return el;
+}
+
+const YB=248, XF=70, X3=345;   // base y, asse figura piana, asse 3D
+
+/* ============ CONO ============ */
+function renderCono(){
+  const a=+val('coA'), b=+val('coB');
+  const axis=val('coAxis');
+  const h=(axis==='a'?a:b), r=(axis==='a'?b:a);
+  const apo=Math.hypot(r,h);
+  const Th=(+val('coSw'))*PI/180, full=Th>=358*PI/180;
+  const sc=Math.min(95/r,190/h,42);
+  // figura piana: triangolo (0,0)-(r,0)-(0,h)
+  const bnd=[[0,0],[r,0],[0,h]];
+  let flat=axisLine(XF,YB-h*sc,YB)+flatPoly(XF,YB,sc,bnd)+rAngle(XF,YB,1,-1);
+  flat+=txt(XF-6,YB-h*sc/2+3,'h',CO.h,'end',12,700);
+  flat+=txt(XF+r*sc/2,YB+15,'r',CO.r,'middle',12,700);
+  flat+=txt(XF+r*sc*0.55+4,YB-h*sc*0.5,'i = a',CO.a,'start',10,600);
+  // solido 3D
+  const prof=[[r*sc,0],[0,h*sc]];
+  const fig=[[0,0],[r*sc,0],[0,h*sc]];
+  let sol=defs('gCono')+axisLine(X3,YB-h*sc,YB);
+  sol+=`<g opacity="${full?1:0.22}">`+drawSolid3D(X3,YB,prof,'gCono')+'</g>';
+  if(!full) sol+=drawSweep3D(X3,YB,prof,fig,Th);
+  sol+=dline(X3,YB,X3+r*sc,YB,CO.r,'',2)+txt(X3+r*sc/2,YB+16,'r',CO.r,'middle',11,700);
+  sol+=txt(X3-8,YB-h*sc/2,'h',CO.h,'end',11,700);
+  sol+=txt(X3+r*sc*0.55,YB-h*sc*0.5,'a',CO.a,'start',11,700);
+  document.getElementById('svgCono').innerHTML=
+    txt(XF+10,18,'Figura generatrice',CO.muted||'#6b7280','middle',11,700)
+    +txt(X3,18,'Solido di rotazione',CO.muted||'#6b7280','middle',11,700)
+    +txt(218,150,'⟳',CO.axis,'middle',26,700)
+    +flat+sol;
+  const V=PI*r*r*h/3, Sl=PI*r*apo, Sb=PI*r*r, St=Sl+Sb;
+  document.getElementById('coRead').innerHTML=
+    readItem('raggio r',fmt(r,1),'cm')+readItem('altezza h',fmt(h,1),'cm')
+    +readItem('apotema a',fmt(apo),'cm')+readItem('Volume',fmt(V),'cm³')
+    +readItem('Sup. laterale',fmt(Sl),'cm²')+readItem('Sup. totale',fmt(St),'cm²');
+  document.getElementById('coName').textContent='Solido generato: CONO (r = '+fmt(r,1)+' cm, h = '+fmt(h,1)+' cm)';
+}
+
+/* ============ BICONO ============ */
+function renderBicono(){
+  const c1=+val('biA'), c2=+val('biB');
+  const i=Math.hypot(c1,c2);
+  const r=c1*c2/i;
+  const h1=c1*c1/i, h2=c2*c2/i;   // proiezioni dei cateti (somma = i)
+  const Th=(+val('biSw'))*PI/180, full=Th>=358*PI/180;
+  const sc=Math.min(92/r,190/i,42);
+  // figura piana: triangolo con asse = ipotenusa verticale, vertice retto a destra
+  const bnd=[[0,0],[r,h1],[0,i]];
+  let flat=axisLine(XF,YB-i*sc,YB)+flatPoly(XF,YB,sc,bnd);
+  flat+=dline(XF,YB-h1*sc,XF+r*sc,YB-h1*sc,CO.r,'4 3',1.4)+rAngle(XF+r*sc,YB-h1*sc,-1,1,7);
+  flat+=txt(XF+r*sc/2,YB-h1*sc-4,'r',CO.r,'middle',12,700);
+  flat+=txt(XF-6,YB-i*sc/2,'ipotenusa',CO.a,'end',9,600);
+  flat+=txt(XF+r*sc*0.55+3,YB-h1*sc*0.5+4,'c₁',CO.h,'start',10,700);
+  flat+=txt(XF+r*sc*0.55+3,YB-(h1+i)*sc*0.5,'c₂',CO.h,'start',10,700);
+  // solido 3D: profilo (0,0)-(r,h1)-(0,i)
+  const prof=[[0,0],[r*sc,h1*sc],[0,i*sc]];
+  const fig=[[0,0],[r*sc,h1*sc],[0,i*sc]];
+  let sol=defs('gBic')+axisLine(X3,YB-i*sc,YB);
+  sol+=`<g opacity="${full?1:0.22}">`+drawSolid3D(X3,YB,prof,'gBic')+'</g>';
+  if(!full) sol+=drawSweep3D(X3,YB,prof,fig,Th);
+  sol+=dline(X3,YB-h1*sc,X3+r*sc,YB-h1*sc,CO.r,'',2)+txt(X3+r*sc/2,YB-h1*sc-5,'r',CO.r,'middle',11,700);
+  document.getElementById('svgBicono').innerHTML=
+    txt(XF+10,18,'Figura generatrice',CO.muted||'#6b7280','middle',11,700)
+    +txt(X3,18,'Solido di rotazione',CO.muted||'#6b7280','middle',11,700)
+    +txt(218,150,'⟳',CO.axis,'middle',26,700)
+    +flat+sol;
+  const V=PI*r*r*i/3, S=PI*r*(c1+c2);
+  document.getElementById('biRead').innerHTML=
+    readItem('ipotenusa i',fmt(i),'cm')+readItem('raggio r',fmt(r),'cm')
+    +readItem('altezze coni',fmt(h1)+' + '+fmt(h2),'cm')+readItem('Volume',fmt(V),'cm³')
+    +readItem('Sup. (2 laterali)',fmt(S),'cm²');
+  document.getElementById('biName').textContent='Solido generato: BICONO (r = '+fmt(r)+' cm, i = '+fmt(i)+' cm)';
+}
+
+/* ============ CILINDRO ============ */
+function renderCilindro(){
+  const a=+val('ciA'), b=+val('ciB');
+  const axis=val('ciAxis');
+  const h=(axis==='a'?a:b), r=(axis==='a'?b:a);
+  const Th=(+val('ciSw'))*PI/180, full=Th>=358*PI/180;
+  const sc=Math.min(95/r,190/h,42);
+  // figura piana: rettangolo
+  const bnd=[[0,0],[r,0],[r,h],[0,h]];
+  let flat=axisLine(XF,YB-h*sc,YB)+flatPoly(XF,YB,sc,bnd)+rAngle(XF,YB,1,-1);
+  flat+=txt(XF-6,YB-h*sc/2+3,'h',CO.h,'end',12,700);
+  flat+=txt(XF+r*sc/2,YB+15,'r',CO.r,'middle',12,700);
+  // solido 3D
+  const prof=[[r*sc,0],[r*sc,h*sc]];
+  const fig=[[0,0],[r*sc,0],[r*sc,h*sc],[0,h*sc]];
+  let sol=defs('gCil')+axisLine(X3,YB-h*sc,YB);
+  sol+=`<g opacity="${full?1:0.22}">`+drawSolid3D(X3,YB,prof,'gCil')+'</g>';
+  if(!full) sol+=drawSweep3D(X3,YB,prof,fig,Th);
+  sol+=dline(X3,YB-h*sc,X3+r*sc,YB-h*sc,CO.r,'',2)+txt(X3+r*sc/2,YB-h*sc-5,'r',CO.r,'middle',11,700);
+  sol+=txt(X3-8,YB-h*sc/2,'h',CO.h,'end',11,700);
+  document.getElementById('svgCilindro').innerHTML=
+    txt(XF+10,18,'Figura generatrice',CO.muted||'#6b7280','middle',11,700)
+    +txt(X3,18,'Solido di rotazione',CO.muted||'#6b7280','middle',11,700)
+    +txt(218,150,'⟳',CO.axis,'middle',26,700)
+    +flat+sol;
+  const V=PI*r*r*h, Sl=2*PI*r*h, St=2*PI*r*(r+h);
+  document.getElementById('ciRead').innerHTML=
+    readItem('raggio r',fmt(r,1),'cm')+readItem('altezza h',fmt(h,1),'cm')
+    +readItem('Volume',fmt(V),'cm³')+readItem('Sup. laterale',fmt(Sl),'cm²')
+    +readItem('Sup. totale',fmt(St),'cm²');
+  document.getElementById('ciName').textContent='Solido generato: CILINDRO (r = '+fmt(r,1)+' cm, h = '+fmt(h,1)+' cm)';
+}
+
+/* ============ TRAPEZIO ============ */
+function renderTrapezio(){
+  const mode=val('trMode');
+  let B=+val('trA'), bm=+val('trB'), h=+val('trH');
+  if(bm>=B) bm=B-0.5;            // la base minore deve essere < base maggiore
+  const Th=(+val('trSw'))*PI/180, full=Th>=358*PI/180;
+  let flat,sol,prof,fig,bnd,read,name;
+  if(mode==='tronco'){
+    // asse = altezza; basi -> raggi
+    const R=B, r=bm, apo=Math.hypot(h,R-r);
+    const sc=Math.min(92/R,190/h,42);
+    bnd=[[0,0],[R,0],[r,h],[0,h]];
+    flat=axisLine(XF,YB-h*sc,YB)+flatPoly(XF,YB,sc,bnd)+rAngle(XF,YB,1,-1);
+    flat+=txt(XF-6,YB-h*sc/2+3,'h',CO.h,'end',12,700);
+    flat+=txt(XF+R*sc/2,YB+15,'R',CO.b,'middle',12,700);
+    flat+=txt(XF+r*sc/2,YB-h*sc-5,'r',CO.b,'middle',11,700);
+    flat+=txt(XF+(R+r)*sc*0.5+6,YB-h*sc*0.5,'a',CO.a,'start',11,700);
+    prof=[[R*sc,0],[r*sc,h*sc]];
+    fig=[[0,0],[R*sc,0],[r*sc,h*sc],[0,h*sc]];
+    sol=defs('gTr')+axisLine(X3,YB-h*sc,YB);
+    sol+=`<g opacity="${full?1:0.22}">`+drawSolid3D(X3,YB,prof,'gTr')+'</g>';
+    if(!full) sol+=drawSweep3D(X3,YB,prof,fig,Th);
+    sol+=dline(X3,YB,X3+R*sc,YB,CO.b,'',2)+txt(X3+R*sc/2,YB+16,'R',CO.b,'middle',11,700);
+    sol+=txt(X3,YB-h*sc-7,'r',CO.b,'middle',11,700)+txt(X3-8,YB-h*sc/2,'h',CO.h,'end',11,700);
+    const V=PI*h*(R*R+r*r+R*r)/3, Sl=PI*(R+r)*apo, Sb=PI*R*R+PI*r*r, St=Sl+Sb;
+    read=readItem('raggio magg. R',fmt(R,1),'cm')+readItem('raggio min. r',fmt(r,1),'cm')
+      +readItem('altezza h',fmt(h,1),'cm')+readItem('apotema a',fmt(apo),'cm')
+      +readItem('Volume',fmt(V),'cm³')+readItem('Sup. laterale',fmt(Sl),'cm²')
+      +readItem('Sup. totale',fmt(St),'cm²');
+    name='Solido generato: TRONCO DI CONO';
+  } else {
+    // asse = base maggiore; raggio = altezza del trapezio
+    const r=h;                 // raggio comune = altezza del trapezio
+    const Hc=B;                // altezza totale del solido = base maggiore
+    const lc=bm;               // lunghezza cilindro = base minore
+    const sc=Math.min(92/r,190/Hc,42);
+    bnd=[[0,0],[r,0],[r,lc],[0,Hc]];
+    flat=axisLine(XF,YB-Hc*sc,YB)+flatPoly(XF,YB,sc,bnd)+rAngle(XF,YB,1,-1);
+    flat+=txt(XF-6,YB-Hc*sc/2,'base magg.',CO.b,'end',9,600);
+    flat+=txt(XF+r*sc/2,YB+15,'h = r',CO.r,'middle',11,700);
+    flat+=txt(XF+r*sc+6,YB-lc*sc/2,'base min.',CO.b,'start',9,600);
+    prof=[[r*sc,0],[r*sc,lc*sc],[0,Hc*sc]];
+    fig=[[0,0],[r*sc,0],[r*sc,lc*sc],[0,Hc*sc]];
+    sol=defs('gTc')+axisLine(X3,YB-Hc*sc,YB);
+    sol+=`<g opacity="${full?1:0.22}">`+drawSolid3D(X3,YB,prof,'gTc')+'</g>';
+    if(!full) sol+=drawSweep3D(X3,YB,prof,fig,Th);
+    sol+=dline(X3,YB,X3+r*sc,YB,CO.r,'',2)+txt(X3+r*sc/2,YB+16,'r',CO.r,'middle',11,700);
+    sol+=txt(X3+r*sc+4,YB-lc*sc*0.5,'cilindro',CO.solidD,'start',9,600);
+    sol+=txt(X3+r*sc*0.4,YB-(lc+Hc)*sc*0.5,'cono',CO.solidD,'start',9,600);
+    const Vcil=PI*r*r*lc, Vcono=PI*r*r*(B-bm)/3, V=Vcil+Vcono;
+    read=readItem('raggio r = h',fmt(r,1),'cm')+readItem('cilindro alto',fmt(lc,1),'cm')
+      +readItem('cono alto (B−b)',fmt(B-bm,1),'cm')+readItem('Vol. cilindro',fmt(Vcil),'cm³')
+      +readItem('Vol. cono',fmt(Vcono),'cm³')+readItem('Volume totale',fmt(V),'cm³');
+    name='Solido generato: CILINDRO + CONO';
+  }
+  document.getElementById('svgTrapezio').innerHTML=
+    txt(XF+10,18,'Figura generatrice','#6b7280','middle',11,700)
+    +txt(X3,18,'Solido di rotazione','#6b7280','middle',11,700)
+    +txt(218,150,'⟳',CO.axis,'middle',26,700)
+    +flat+sol;
+  document.getElementById('trRead').innerHTML=read;
+  document.getElementById('trName').textContent=name;
+}
+
+/* ============ QUIZ DATA ============ */
+const QUIZZES={
+cono:[
+ {q:"Quale solido si ottiene ruotando un triangolo rettangolo di un giro completo attorno a un cateto?",
+  opts:["Un cilindro","Un cono","Una sfera","Un tronco di cono"],ans:1,
+  exp:"Un cateto fa da asse, l'altro cateto traccia il cerchio di base: si genera un cono."},
+ {q:"Ruotando il triangolo attorno a un cateto, quel cateto (l'asse) diventa…",
+  opts:["il raggio","l'altezza","l'apotema","il diametro"],ans:1,
+  exp:"Il cateto attorno a cui si ruota coincide con l'altezza del cono."},
+ {q:"L'altro cateto, quello perpendicolare all'asse, diventa…",
+  opts:["il raggio di base","l'altezza","l'apotema","la circonferenza"],ans:0,
+  exp:"L'estremo del cateto perpendicolare all'asse traccia il cerchio di base: quel cateto è il raggio r."},
+ {q:"L'ipotenusa del triangolo diventa…",
+  opts:["il raggio","il diametro","l'apotema (il lato) del cono","l'altezza"],ans:2,
+  exp:"L'ipotenusa, ruotando, genera la superficie laterale: è l'apotema a del cono."},
+ {q:"Tra apotema a, raggio r e altezza h di un cono quale relazione vale?",
+  opts:["a = r + h","a² = r² + h²","a = r · h","a² = r² − h²"],ans:1,
+  exp:"Il triangolo è rettangolo: per Pitagora a² = r² + h², cioè a = √(r²+h²)."},
+ {q:"Un triangolo ha i cateti di 3 cm e 4 cm e ruota attorno al cateto di 4 cm. Quanto vale il raggio del cono?",
+  opts:["4 cm","3 cm","5 cm","7 cm"],ans:1,
+  exp:"L'asse è il cateto di 4 cm (altezza); il raggio è l'altro cateto: r = 3 cm."},
+ {q:"Stesso cono (r = 3 cm, h = 4 cm): quanto vale l'apotema?",
+  opts:["5 cm","6 cm","7 cm","12 cm"],ans:0,
+  exp:"a = √(r²+h²) = √(9+16) = √25 = 5 cm (è l'ipotenusa del triangolo)."},
+ {q:"Volume del cono con r = 3 cm e h = 4 cm (usa π ≈ 3,14):",
+  opts:["37,68 cm³","113,04 cm³","12,56 cm³","150,72 cm³"],ans:0,
+  exp:"V = ⅓·π·r²·h = ⅓·3,14·9·4 = ⅓·113,04 = 37,68 cm³."},
+ {q:"Superficie laterale del cono con r = 3 cm e apotema 5 cm (π ≈ 3,14):",
+  opts:["28,26 cm²","47,1 cm²","94,2 cm²","75,36 cm²"],ans:1,
+  exp:"S_laterale = π·r·a = 3,14·3·5 = 47,1 cm²."},
+ {q:"Se lo stesso triangolo (cateti 3 e 4) ruota attorno all'altro cateto (3 cm), il cono ottenuto…",
+  opts:["è identico al precedente","è diverso: raggio e altezza si scambiano (r = 4, h = 3)","ha apotema diversa","non è più un cono"],ans:1,
+  exp:"Cambiando asse, r e h si scambiano (r = 4 cm, h = 3 cm). L'apotema resta 5 cm perché l'ipotenusa non cambia."}
+],
+bicono:[
+ {q:"Quale solido si ottiene ruotando un triangolo rettangolo attorno alla sua ipotenusa?",
+  opts:["Un cono","Un cilindro","Due coni uniti per la base (bicono)","Una sfera"],ans:2,
+  exp:"Attorno all'ipotenusa il triangolo genera due coni che condividono la stessa base: il bicono o doppio cono."},
+ {q:"Nel bicono, il raggio comune dei due coni è…",
+  opts:["l'ipotenusa","l'altezza del triangolo relativa all'ipotenusa","un cateto","metà dell'ipotenusa"],ans:1,
+  exp:"Il vertice con l'angolo retto, ruotando, traccia la base comune: il raggio è l'altezza relativa all'ipotenusa."},
+ {q:"Come si calcola questo raggio comune r?",
+  opts:["r = (c₁ · c₂) / i","r = c₁ + c₂","r = i / 2","r = (c₁ + c₂) / i"],ans:0,
+  exp:"r = (c₁ · c₂) / i, dove c₁, c₂ sono i cateti e i l'ipotenusa."},
+ {q:"Da dove nasce la formula r = (c₁·c₂)/i?",
+  opts:["Dal teorema di Pitagora","Dall'equivalenza delle aree: ½·c₁·c₂ = ½·i·r","Da una proporzione tra i lati","Dalla formula del volume"],ans:1,
+  exp:"L'area del triangolo vale sia ½·c₁·c₂ sia ½·i·r: uguagliando si ottiene r = (c₁·c₂)/i."},
+ {q:"L'apotema di ciascuno dei due coni del bicono coincide con…",
+  opts:["l'ipotenusa","il raggio comune","il rispettivo cateto","l'altezza del cono"],ans:2,
+  exp:"Ogni cono ha come apotema (lato) il cateto da cui è generato."},
+ {q:"Le altezze dei due coni, sommate, danno…",
+  opts:["un cateto","l'ipotenusa","il raggio","il diametro"],ans:1,
+  exp:"Le due altezze sono le proiezioni dei cateti sull'ipotenusa: la loro somma è proprio l'ipotenusa i."},
+ {q:"Triangolo con cateti 3 cm e 4 cm (ipotenusa 5 cm): quanto vale il raggio comune del bicono?",
+  opts:["1,5 cm","2,4 cm","3,5 cm","2 cm"],ans:1,
+  exp:"r = (c₁·c₂)/i = (3·4)/5 = 12/5 = 2,4 cm."},
+ {q:"Bicono con raggio 2,4 cm e ipotenusa 5 cm: quanto vale il volume? (V = ⅓·π·r²·i, π ≈ 3,14)",
+  opts:["30,14 cm³","90,43 cm³","18,1 cm³","60,3 cm³"],ans:0,
+  exp:"V = ⅓·π·r²·i = ⅓·3,14·5,76·5 = ⅓·90,43 ≈ 30,14 cm³."},
+ {q:"Quali superfici si contano nella superficie totale del bicono?",
+  opts:["Le due superfici laterali e le due basi","Solo le due superfici laterali","Solo le due basi","Una sola superficie laterale"],ans:1,
+  exp:"Le basi dei due coni coincidono e sono interne: contano solo le due superfici laterali."},
+ {q:"Superficie del bicono con r = 2,4 cm e cateti 3 cm e 4 cm: S = π·r·(c₁+c₂), π ≈ 3,14.",
+  opts:["52,75 cm²","37,68 cm²","16,8 cm²","105,5 cm²"],ans:0,
+  exp:"S = π·r·(c₁+c₂) = 3,14·2,4·(3+4) = 3,14·2,4·7 ≈ 52,75 cm²."}
+],
+cilindro:[
+ {q:"Quale solido si ottiene ruotando un rettangolo di un giro completo attorno a un suo lato?",
+  opts:["Un cono","Un cilindro","Un cubo","Un prisma"],ans:1,
+  exp:"Il lato fa da asse, il lato perpendicolare traccia il cerchio di base: si genera un cilindro."},
+ {q:"Il lato attorno a cui ruota (l'asse) diventa…",
+  opts:["il raggio","l'altezza del cilindro","l'apotema","il diametro"],ans:1,
+  exp:"Il lato–asse coincide con l'altezza h del cilindro."},
+ {q:"Il lato perpendicolare all'asse diventa…",
+  opts:["il raggio di base","l'altezza","l'apotema","la circonferenza"],ans:0,
+  exp:"Quel lato traccia il cerchio di base: è il raggio r."},
+ {q:"Quante basi circolari ha un cilindro?",
+  opts:["Una","Due","Tre","Nessuna"],ans:1,
+  exp:"Il cilindro ha due basi circolari uguali (sopra e sotto)."},
+ {q:"La superficie laterale di un cilindro, «srotolata», è un…",
+  opts:["cerchio","triangolo","rettangolo di base 2πr e altezza h","trapezio"],ans:2,
+  exp:"Srotolando la superficie laterale si ottiene un rettangolo: base 2πr (la circonferenza) e altezza h."},
+ {q:"Qual è la formula del volume del cilindro?",
+  opts:["V = π·r²·h","V = ⅓·π·r²·h","V = 2·π·r·h","V = π·r·h"],ans:0,
+  exp:"V = area di base × altezza = π·r²·h."},
+ {q:"Un rettangolo 5 cm × 3 cm ruota attorno al lato di 5 cm. Quanto valgono raggio e altezza?",
+  opts:["r = 5 cm, h = 3 cm","r = 3 cm, h = 5 cm","r = 4 cm, h = 4 cm","r = 5 cm, h = 5 cm"],ans:1,
+  exp:"L'asse (lato 5 cm) è l'altezza: h = 5 cm; il raggio è l'altro lato: r = 3 cm."},
+ {q:"Volume del cilindro con r = 3 cm e h = 5 cm (π ≈ 3,14):",
+  opts:["141,3 cm³","94,2 cm³","47,1 cm³","235,5 cm³"],ans:0,
+  exp:"V = π·r²·h = 3,14·9·5 = 141,3 cm³."},
+ {q:"Superficie laterale del cilindro con r = 3 cm e h = 5 cm (π ≈ 3,14):",
+  opts:["94,2 cm²","141,3 cm²","47,1 cm²","150,72 cm²"],ans:0,
+  exp:"S_laterale = 2·π·r·h = 2·3,14·3·5 = 94,2 cm²."},
+ {q:"Se lo stesso rettangolo (5 × 3) ruota attorno all'altro lato (3 cm), si ottiene…",
+  opts:["lo stesso cilindro","un cilindro diverso (r = 5 cm, h = 3 cm)","un cono","una sfera"],ans:1,
+  exp:"Raggio e altezza si scambiano: r = 5 cm, h = 3 cm. È un cilindro diverso, con volume maggiore (V = π·25·3 = 235,5 cm³)."}
+],
+trapezio:[
+ {q:"Ruotando un trapezio rettangolo attorno all'altezza (il lato perpendicolare alle basi) si ottiene…",
+  opts:["un cilindro","un cono","un tronco di cono","un bicono"],ans:2,
+  exp:"Le due basi parallele tracciano due cerchi di raggio diverso: si genera un tronco di cono."},
+ {q:"In questo caso, le due basi del trapezio diventano…",
+  opts:["le due altezze","i due raggi (maggiore e minore) del tronco","i due apotemi","le due circonferenze"],ans:1,
+  exp:"La base maggiore diventa il raggio maggiore R, la base minore il raggio minore r."},
+ {q:"L'altezza del trapezio rettangolo diventa…",
+  opts:["l'apotema del tronco","l'altezza del tronco","il raggio maggiore","il raggio minore"],ans:1,
+  exp:"Il lato perpendicolare alle basi (l'asse) è l'altezza h del tronco."},
+ {q:"Il lato obliquo del trapezio diventa…",
+  opts:["l'altezza","l'apotema del tronco","un raggio","il diametro"],ans:1,
+  exp:"Il lato obliquo, ruotando, genera la superficie laterale: è l'apotema a del tronco."},
+ {q:"Come si calcola l'apotema a del tronco conoscendo h, R e r?",
+  opts:["a = R − r","a = √(h² + (R − r)²)","a = h + R + r","a = √(R² − r²)"],ans:1,
+  exp:"L'apotema è l'ipotenusa di un triangolo rettangolo con cateti h e (R − r): a = √(h²+(R−r)²)."},
+ {q:"Trapezio rettangolo con base maggiore 6 cm, base minore 3 cm, altezza 4 cm: quanto vale l'apotema del tronco?",
+  opts:["5 cm","7 cm","4 cm","3 cm"],ans:0,
+  exp:"a = √(h²+(R−r)²) = √(16 + (6−3)²) = √(16+9) = √25 = 5 cm."},
+ {q:"Volume del tronco con R = 6 cm, r = 3 cm, h = 4 cm. V = ⅓·π·h·(R²+r²+R·r), π ≈ 3,14.",
+  opts:["263,76 cm³","791,28 cm³","141,3 cm³","452,16 cm³"],ans:0,
+  exp:"R²+r²+R·r = 36+9+18 = 63; V = ⅓·3,14·4·63 = ⅓·791,28 ≈ 263,76 cm³."},
+ {q:"Superficie laterale del tronco con R = 6 cm, r = 3 cm, apotema 5 cm. S = π·(R+r)·a, π ≈ 3,14.",
+  opts:["141,3 cm²","94,2 cm²","47,1 cm²","282,6 cm²"],ans:0,
+  exp:"S_laterale = π·(R+r)·a = 3,14·(6+3)·5 = 3,14·9·5 = 141,3 cm²."},
+ {q:"Se invece il trapezio rettangolo ruota attorno alla base maggiore, si ottiene…",
+  opts:["un altro tronco di cono","un solido composto: un cilindro con sopra un cono","una sfera","due cilindri"],ans:1,
+  exp:"Ruotando attorno alla base maggiore si genera un cilindro (dalla base minore) sormontato da un cono (dal lato obliquo)."},
+ {q:"In quel solido composto, il raggio comune di cilindro e cono è dato da…",
+  opts:["la base maggiore","la base minore","l'altezza del trapezio","il lato obliquo"],ans:2,
+  exp:"L'altezza del trapezio diventa il raggio. Il cilindro è alto come la base minore, il cono come la differenza delle basi (B − b)."}
+]};
+
+/* ============ QUIZ ENGINE ============ */
+const QSECTIONS=['cono','bicono','cilindro','trapezio'];
+const qState={};
+QSECTIONS.forEach(s=>{qState[s]={idx:0,score:0,answered:false,done:false};});
+
+function renderQuiz(s){
+  const st=qState[s], qs=QUIZZES[s], el=document.getElementById('qz-'+s);
+  if(!el) return;
+  const total=qs.length;
+  let body;
+  if(st.done){
+    const r=st.score/total;
+    const mi=r<=0.3?0:r<=0.5?1:r<=0.8?2:r<=0.94?3:4;
+    const icons=['😕','🙂','😊','🎉','🏆'];
+    const msgs=['Da rivedere — rileggi la teoria e riprova.','Sufficiente — qualche lacuna da colmare.','Buono — ancora un po\' e arrivi al massimo!','Ottimo risultato!','Perfetto — nessun errore!'];
+    body=`<div class="quiz-done">
+      <span class="quiz-score-big">${icons[mi]} ${st.score}/${total}</span>
+      <p class="quiz-msg">${msgs[mi]}</p>
+      <button class="quiz-restart" onclick="restartQuiz('${s}')">🔄 Ricomincia quiz</button>
+    </div>`;
+  } else {
+    const q=qs[st.idx], pct=st.idx/total*100;
+    body=`<div class="quiz-hd">
+        <span style="color:var(--muted)">Domanda ${st.idx+1} / ${total}</span>
+        <span style="font-weight:700;color:var(--primary-d)">Punteggio: ${st.score}</span>
+      </div>
+      <div class="quiz-bar-wrap"><div class="quiz-bar-fill" style="width:${pct}%"></div></div>
+      <p class="quiz-q">${q.q}</p>
+      <div class="quiz-opts">${q.opts.map((o,i)=>`<button class="quiz-btn" id="qb-${s}-${i}" onclick="answerQuiz('${s}',${i})">${'ABCD'[i]}) ${o}</button>`).join('')}</div>
+      <div class="quiz-exp" id="qexp-${s}" style="display:none"></div>
+      <button class="quiz-next" id="qnxt-${s}" style="display:none" onclick="nextQuiz('${s}')">${st.idx+1<total?'Prossima domanda →':'Vedi il risultato finale →'}</button>`;
+  }
+  el.innerHTML=`<div class="card"><h2>🧩 Quiz</h2>${body}</div>`;
+}
+function answerQuiz(s,chosen){
+  const st=qState[s]; if(st.answered) return; st.answered=true;
+  const q=QUIZZES[s][st.idx], correct=chosen===q.ans;
+  if(correct) st.score++;
+  for(let i=0;i<q.opts.length;i++){
+    const bt=document.getElementById(`qb-${s}-${i}`); if(!bt) continue;
+    bt.disabled=true;
+    if(i===q.ans) bt.classList.add('correct');
+    else if(i===chosen) bt.classList.add('wrong');
+  }
+  const exp=document.getElementById(`qexp-${s}`);
+  exp.style.display='';
+  exp.className=`quiz-exp ${correct?'ok':'no'}`;
+  exp.innerHTML=`<strong>${correct?'✓ Corretto!':'✗ Sbagliato.'}</strong> ${q.exp}`;
+  document.getElementById(`qnxt-${s}`).style.display='';
+}
+function nextQuiz(s){
+  const st=qState[s]; st.idx++; st.answered=false;
+  if(st.idx>=QUIZZES[s].length) st.done=true;
+  renderQuiz(s);
+}
+function restartQuiz(s){
+  qState[s]={idx:0,score:0,answered:false,done:false};
+  renderQuiz(s);
+}
+
+/* ============ WIRING ============ */
+['coA','coB','coAxis','coSw'].forEach(id=>document.getElementById(id).addEventListener('input',renderCono));
+['biA','biB','biSw'].forEach(id=>document.getElementById(id).addEventListener('input',renderBicono));
+['ciA','ciB','ciAxis','ciSw'].forEach(id=>document.getElementById(id).addEventListener('input',renderCilindro));
+['trMode','trA','trB','trH','trSw'].forEach(id=>document.getElementById(id).addEventListener('input',renderTrapezio));
+
+const fmt1=v=>fmt(v,1)+' cm';
+const fmtA=v=>v>=358?'360°':(v+'°');
+bindRange('coA','coAv',fmt1); bindRange('coB','coBv',fmt1); bindRange('coSw','coSwv',fmtA);
+bindRange('biA','biAv',fmt1); bindRange('biB','biBv',fmt1); bindRange('biSw','biSwv',fmtA);
+bindRange('ciA','ciAv',fmt1); bindRange('ciB','ciBv',fmt1); bindRange('ciSw','ciSwv',fmtA);
+bindRange('trA','trAv',fmt1); bindRange('trB','trBv',fmt1); bindRange('trH','trHv',fmt1); bindRange('trSw','trSwv',fmtA);
+
+QSECTIONS.forEach(renderQuiz);
+
+/* ----- Sticky nav below header ----- */
+const _hdr=document.querySelector('header');
+const _nav=document.querySelector('nav.main');
+function _updateNavTop(){ _nav.style.top=_hdr.offsetHeight+'px'; }
+new ResizeObserver(_updateNavTop).observe(_hdr);
+_updateNavTop();
+
+/* ----- Initial render ----- */
+renderCono(); renderBicono(); renderCilindro(); renderTrapezio();
+</script>
+</body>
+</html>
