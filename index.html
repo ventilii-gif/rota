@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <title>Solidi di rotazione · Geometria</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <style>
 :root{
   --bg:#f6f7fb;--surface:#fff;--surface2:#f8f9fc;
@@ -76,6 +78,8 @@ table.ftable tr:nth-child(even) td{background:var(--surface2)}
 .frac>.num{padding:0 .4em;line-height:1.15}
 .frac>.den{border-top:1.7px solid currentColor;padding:0 .4em;line-height:1.2}
 .rt{border-top:1.7px solid currentColor;padding:.04em .16em 0;margin-left:-.05em}
+.katex{white-space:normal}
+.formula .katex{font-size:1.05em}
 
 /* ===== Formulas ===== */
 .formula{background:var(--primary-l);border-left:3px solid var(--primary);
@@ -241,12 +245,12 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
       <li><b>ipotenusa</b> <span class="ar">→</span> diventa l'<b>apotema</b> a (il lato) del cono</li>
     </ul>
     <p>Poiché il triangolo è rettangolo, vale il teorema di Pitagora tra apotema, raggio e altezza:</p>
-    <div class="formula">a² = r² + h² &nbsp;&nbsp;⇒&nbsp;&nbsp; a = √<span class="rt">r² + h²</span></div>
+    <div class="formula" data-tex="a^2 = r^2 + h^2 \;\Rightarrow\; a = \sqrt{r^2 + h^2}">a² = r² + h² &nbsp;&nbsp;⇒&nbsp;&nbsp; a = √<span class="rt">r² + h²</span></div>
     <h3>Volume e superfici</h3>
-    <div class="formula">V = <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · h</div>
-    <div class="formula">S<sub>laterale</sub> = π · r · a</div>
-    <div class="formula">S<sub>base</sub> = π · r²</div>
-    <div class="formula">S<sub>totale</sub> = π · r · (r + a)</div>
+    <div class="formula" data-tex="V = \tfrac{1}{3}\,\pi\,r^2\,h">V = <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · h</div>
+    <div class="formula" data-tex="S_{\text{laterale}} = \pi\,r\,a">S<sub>laterale</sub> = π · r · a</div>
+    <div class="formula" data-tex="S_{\text{base}} = \pi\,r^2">S<sub>base</sub> = π · r²</div>
+    <div class="formula" data-tex="S_{\text{totale}} = \pi\,r\,(r + a)">S<sub>totale</sub> = π · r · (r + a)</div>
     <div class="tip">🔁 Se lo stesso triangolo ruota attorno all'<em>altro</em> cateto, raggio e altezza si scambiano: si ottiene un cono <strong>diverso</strong> (ma con la stessa apotema, perché l'ipotenusa non cambia).</div>
   </div>
   <p class="sec-label">Simulazione</p>
@@ -285,10 +289,10 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
       <li><b>ogni cateto</b> <span class="ar">→</span> è l'<b>apotema</b> del cono corrispondente</li>
     </ul>
     <p>Il raggio comune si ricava dall'<strong>equivalenza delle aree</strong>: l'area del triangolo si può scrivere in due modi.</p>
-    <div class="formula"><span class="frac"><span class="num">1</span><span class="den">2</span></span> · c₁ · c₂ = <span class="frac"><span class="num">1</span><span class="den">2</span></span> · i · r &nbsp;&nbsp;⇒&nbsp;&nbsp; r = <span class="frac"><span class="num">c₁ · c₂</span><span class="den">i</span></span></div>
+    <div class="formula" data-tex="\tfrac{1}{2}\,c_1\,c_2 = \tfrac{1}{2}\,i\,r \;\Rightarrow\; r = \dfrac{c_1\,c_2}{i}"><span class="frac"><span class="num">1</span><span class="den">2</span></span> · c₁ · c₂ = <span class="frac"><span class="num">1</span><span class="den">2</span></span> · i · r &nbsp;&nbsp;⇒&nbsp;&nbsp; r = <span class="frac"><span class="num">c₁ · c₂</span><span class="den">i</span></span></div>
     <h3>Volume e superficie</h3>
-    <div class="formula">V = <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · i</div>
-    <div class="formula">S = π · r · c₁ + π · r · c₂ = π · r · (c₁ + c₂)</div>
+    <div class="formula" data-tex="V = \tfrac{1}{3}\,\pi\,r^2\,i">V = <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · i</div>
+    <div class="formula" data-tex="S = \pi\,r\,c_1 + \pi\,r\,c_2 = \pi\,r\,(c_1 + c_2)">S = π · r · c₁ + π · r · c₂ = π · r · (c₁ + c₂)</div>
     <div class="warn">⚠️ Le basi dei due coni <strong>coincidono</strong>: sono interne al solido, quindi <em>non</em> si contano nella superficie. Restano solo le due superfici laterali.</div>
   </div>
   <p class="sec-label">Simulazione</p>
@@ -324,10 +328,10 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
     </ul>
     <p>Il cilindro ha <strong>due basi</strong> circolari uguali. La sua superficie laterale, "srotolata", è un <strong>rettangolo</strong> con base 2πr (la circonferenza) e altezza h.</p>
     <h3>Volume e superfici</h3>
-    <div class="formula">V = π · r² · h</div>
-    <div class="formula">S<sub>laterale</sub> = 2 · π · r · h</div>
-    <div class="formula">S<sub>base</sub> = π · r²</div>
-    <div class="formula">S<sub>totale</sub> = 2 · π · r · (r + h)</div>
+    <div class="formula" data-tex="V = \pi\,r^2\,h">V = π · r² · h</div>
+    <div class="formula" data-tex="S_{\text{laterale}} = 2\,\pi\,r\,h">S<sub>laterale</sub> = 2 · π · r · h</div>
+    <div class="formula" data-tex="S_{\text{base}} = \pi\,r^2">S<sub>base</sub> = π · r²</div>
+    <div class="formula" data-tex="S_{\text{totale}} = 2\,\pi\,r\,(r + h)">S<sub>totale</sub> = 2 · π · r · (r + h)</div>
     <div class="tip">🔁 Ruotando lo stesso rettangolo attorno all'<em>altro</em> lato, raggio e altezza si scambiano: si ottiene un cilindro diverso, in generale con volume diverso.</div>
   </div>
   <p class="sec-label">Simulazione</p>
@@ -367,11 +371,11 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
       <li><b>lato obliquo</b> <span class="ar">→</span> <b>apotema</b> a del tronco</li>
     </ul>
     <p>L'apotema è l'ipotenusa di un triangolo rettangolo con cateti h e (R − r), quindi per Pitagora:</p>
-    <div class="formula">a = √<span class="rt">h² + (R − r)²</span></div>
+    <div class="formula" data-tex="a = \sqrt{h^2 + (R - r)^2}">a = √<span class="rt">h² + (R − r)²</span></div>
     <h3>Volume e superfici</h3>
-    <div class="formula">V = <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · h · (R² + r² + R · r)</div>
-    <div class="formula">S<sub>laterale</sub> = π · (R + r) · a</div>
-    <div class="formula">S<sub>totale</sub> = π · (R² + r²) + π · (R + r) · a</div>
+    <div class="formula" data-tex="V = \tfrac{1}{3}\,\pi\,h\,(R^2 + r^2 + R\,r)">V = <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · h · (R² + r² + R · r)</div>
+    <div class="formula" data-tex="S_{\text{laterale}} = \pi\,(R + r)\,a">S<sub>laterale</sub> = π · (R + r) · a</div>
+    <div class="formula" data-tex="S_{\text{totale}} = \pi\,(R^2 + r^2) + \pi\,(R + r)\,a">S<sub>totale</sub> = π · (R² + r²) + π · (R + r) · a</div>
     <div class="tip">💡 Il tronco di cono si può anche immaginare come un <strong>«cono grande meno cono piccolo»</strong>: un cono completo a cui è stata tolta la punta.</div>
   </div>
   <p class="sec-label">Simulazione</p>
@@ -409,8 +413,8 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
       <li><b>differenza delle basi</b> (B − b) <span class="ar">→</span> altezza del <b>cono</b></li>
     </ul>
     <h3>Volume</h3>
-    <div class="formula">V = V<sub>cilindro</sub> + V<sub>cono</sub></div>
-    <div class="formula">V = π · r² · b &nbsp;+&nbsp; <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · (B − b)</div>
+    <div class="formula" data-tex="V = V_{\text{cilindro}} + V_{\text{cono}}">V = V<sub>cilindro</sub> + V<sub>cono</sub></div>
+    <div class="formula" data-tex="V = \pi\,r^2\,b + \tfrac{1}{3}\,\pi\,r^2\,(B - b)">V = π · r² · b &nbsp;+&nbsp; <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · (B − b)</div>
     <div class="warn">⚠️ Il volume del solido composto si calcola <strong>sommando</strong> i volumi dei due solidi che lo formano. Attenzione: cilindro e cono hanno lo <em>stesso</em> raggio ma altezze diverse.</div>
   </div>
   <p class="sec-label">Simulazione</p>
@@ -459,11 +463,11 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
     <div class="ftable-wrap">
       <table class="ftable">
         <tr><th>Solido</th><th>Volume</th><th>Superficie laterale</th><th>Superficie totale</th></tr>
-        <tr><td>Cilindro</td><td class="fx">π · r² · h</td><td class="fx">2 · π · r · h</td><td class="fx">2 · π · r · (r + h)</td></tr>
-        <tr><td>Cono</td><td class="fx"><span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · h</td><td class="fx">π · r · a</td><td class="fx">π · r · (r + a)</td></tr>
-        <tr><td>Tronco di cono</td><td class="fx"><span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · h · (R² + r² + R · r)</td><td class="fx">π · (R + r) · a</td><td class="fx">π · (R² + r²) + π · (R + r) · a</td></tr>
-        <tr><td>Bicono</td><td class="fx"><span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · i</td><td class="fx">π · r · (c₁ + c₂)</td><td class="fx">= sup. laterale (le basi sono interne)</td></tr>
-        <tr><td>Cilindro + cono</td><td class="fx">π · r² · b + <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · (B − b)</td><td colspan="2">somma delle superfici dei due solidi</td></tr>
+        <tr><td>Cilindro</td><td class="fx" data-tex="\pi\,r^2\,h">π · r² · h</td><td class="fx" data-tex="2\,\pi\,r\,h">2 · π · r · h</td><td class="fx" data-tex="2\,\pi\,r\,(r + h)">2 · π · r · (r + h)</td></tr>
+        <tr><td>Cono</td><td class="fx" data-tex="\tfrac{1}{3}\,\pi\,r^2\,h"><span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · h</td><td class="fx" data-tex="\pi\,r\,a">π · r · a</td><td class="fx" data-tex="\pi\,r\,(r + a)">π · r · (r + a)</td></tr>
+        <tr><td>Tronco di cono</td><td class="fx" data-tex="\tfrac{1}{3}\,\pi\,h\,(R^2 + r^2 + R\,r)"><span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · h · (R² + r² + R · r)</td><td class="fx" data-tex="\pi\,(R + r)\,a">π · (R + r) · a</td><td class="fx" data-tex="\pi\,(R^2 + r^2) + \pi\,(R + r)\,a">π · (R² + r²) + π · (R + r) · a</td></tr>
+        <tr><td>Bicono</td><td class="fx" data-tex="\tfrac{1}{3}\,\pi\,r^2\,i"><span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · i</td><td class="fx" data-tex="\pi\,r\,(c_1 + c_2)">π · r · (c₁ + c₂)</td><td class="fx">= sup. laterale (le basi sono interne)</td></tr>
+        <tr><td>Cilindro + cono</td><td class="fx" data-tex="\pi\,r^2\,b + \tfrac{1}{3}\,\pi\,r^2\,(B - b)">π · r² · b + <span class="frac"><span class="num">1</span><span class="den">3</span></span> · π · r² · (B − b)</td><td colspan="2">somma delle superfici dei due solidi</td></tr>
       </table>
     </div>
     <div class="tip">💡 Le formule di area del cerchio (π·r²) e della circonferenza (2·π·r) sono il "mattone" di tutte le altre.</div>
@@ -472,12 +476,12 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
   <div class="card">
     <h2>Relazioni utili (teorema di Pitagora)</h2>
     <p><strong>Cono</strong> — l'apotema è l'ipotenusa del triangolo generatore:</p>
-    <div class="formula">a² = r² + h² &nbsp;⇒&nbsp; a = √<span class="rt">r² + h²</span></div>
+    <div class="formula" data-tex="a^2 = r^2 + h^2 \;\Rightarrow\; a = \sqrt{r^2 + h^2}">a² = r² + h² &nbsp;⇒&nbsp; a = √<span class="rt">r² + h²</span></div>
     <p><strong>Tronco di cono</strong> — l'apotema con cateti h e (R − r):</p>
-    <div class="formula">a = √<span class="rt">h² + (R − r)²</span></div>
-    <p><strong>Bicono</strong> — raggio comune e altezze (dall'ipotenusa i = √<span class="rt">c₁² + c₂²</span>):</p>
-    <div class="formula">r = <span class="frac"><span class="num">c₁ · c₂</span><span class="den">i</span></span></div>
-    <div class="formula">h₁ + h₂ = i</div>
+    <div class="formula" data-tex="a = \sqrt{h^2 + (R - r)^2}">a = √<span class="rt">h² + (R − r)²</span></div>
+    <p><strong>Bicono</strong> — raggio comune e altezze (dall'ipotenusa <span data-tex="i = \sqrt{c_1^2 + c_2^2}">i = √<span class="rt">c₁² + c₂²</span></span>):</p>
+    <div class="formula" data-tex="r = \dfrac{c_1\,c_2}{i}">r = <span class="frac"><span class="num">c₁ · c₂</span><span class="den">i</span></span></div>
+    <div class="formula" data-tex="h_1 + h_2 = i">h₁ + h₂ = i</div>
   </div>
 </section>
 
@@ -926,29 +930,55 @@ const QSECTIONS=['cono','bicono','cilindro','tronco','composto'];
 const qState={};
 QSECTIONS.forEach(s=>{qState[s]={idx:0,score:0,answered:false,done:false};});
 
-/* Converte la notazione inline dei quiz in simbologia corretta:
-   √(...) e √numero -> radice con vinculum; ⅓ ½ ⅔ ¼ ¾ ⅕ -> frazioni impilate */
+/* Rende le formule in LaTeX con KaTeX (se disponibile), con fallback CSS.
+   Converte la notazione inline dei quiz: √(...) e √numero -> radice; ⅓ ½ ... ->
+   frazioni; pedice lettera_parola -> pedice vero (senza underscore). */
 function mkFrac(a,b){return '<span class="frac"><span class="num">'+a+'</span><span class="den">'+b+'</span></span>';}
+function tex(s,disp){ if(!window.katex) return null; try{return katex.renderToString(s,{throwOnError:false,displayMode:!!disp});}catch(e){return null;} }
+function uni2tex(e){
+  return e.replace(/²/g,'^{2}').replace(/³/g,'^{3}')
+          .replace(/·/g,'\\cdot ').replace(/−/g,'-')
+          .replace(/₁/g,'_{1}').replace(/₂/g,'_{2}').replace(/₃/g,'_{3}')
+          .replace(/\s+/g,' ').trim();
+}
 function mathFmt(s){
+  s=s.replace(/([A-Za-zπ])_([A-Za-zàèéìòù]{2,})/g,'$1<sub>$2</sub>');   // pedici senza underscore
   let out='',i=0;
   while(i<s.length){
     const ch=s[i];
     if(ch==='√'){
+      let inner=null,next=i+1;
       if(s[i+1]==='('){
         let depth=0,j=i+1;
         for(;j<s.length;j++){ if(s[j]==='(')depth++; else if(s[j]===')'){depth--; if(!depth)break;} }
-        out+='√<span class="rt">'+mathFmt(s.slice(i+2,j))+'</span>'; i=j+1; continue;
+        inner=s.slice(i+2,j); next=j+1;
+      } else {
+        let j=i+1;
+        while(j<s.length&&(/[0-9]/.test(s[j])||((s[j]===','||s[j]==='.')&&/[0-9]/.test(s[j+1])))) j++;
+        if(j>i+1){ inner=s.slice(i+1,j); next=j; }
       }
-      let j=i+1;
-      while(j<s.length&&(/[0-9]/.test(s[j])||((s[j]===','||s[j]==='.')&&/[0-9]/.test(s[j+1])))) j++;
-      if(j>i+1){ out+='√<span class="rt">'+s.slice(i+1,j)+'</span>'; i=j; continue; }
+      if(inner!==null){
+        const k=tex('\\sqrt{'+uni2tex(inner)+'}');
+        out+= k!==null ? k : ('√<span class="rt">'+inner+'</span>');
+        i=next; continue;
+      }
       out+=ch; i++; continue;
     }
     const fg={'⅓':['1','3'],'½':['1','2'],'⅔':['2','3'],'¼':['1','4'],'¾':['3','4'],'⅕':['1','5']}[ch];
-    if(fg){ out+=mkFrac(fg[0],fg[1]); i++; continue; }
+    if(fg){
+      const k=tex('\\tfrac{'+fg[0]+'}{'+fg[1]+'}');
+      out+= k!==null ? k : mkFrac(fg[0],fg[1]);
+      i++; continue;
+    }
     out+=ch; i++;
   }
   return out;
+}
+function renderTeX(){
+  if(!window.katex) return;   // fallback: resta la resa CSS già presente nei box
+  document.querySelectorAll('[data-tex]').forEach(function(el){
+    try{ el.innerHTML=katex.renderToString(el.getAttribute('data-tex'),{throwOnError:false}); }catch(e){}
+  });
 }
 
 function renderQuiz(s){
@@ -1032,6 +1062,7 @@ _updateNavTop();
 
 /* ----- Initial render ----- */
 renderCono(); renderBicono(); renderCilindro(); renderTronco(); renderComposto();
+renderTeX();
 </script>
 </body>
 </html>
