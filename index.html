@@ -162,6 +162,12 @@ svg.sim{width:100%;height:auto;background:#fcfdff;border:1px solid var(--border)
   transition:background .15s}
 .quiz-next{margin-top:.25rem}
 .quiz-next:hover,.quiz-restart:hover{background:var(--primary-d)}
+.quiz-prev{background:var(--surface2);color:var(--primary-d);border:1.5px solid var(--border);
+  border-radius:8px;padding:.46rem 1.05rem;font-size:.87em;cursor:pointer;font-family:inherit;
+  transition:background .15s,border-color .15s}
+.quiz-prev:hover{background:var(--primary-l);border-color:var(--primary)}
+.quiz-nav{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-top:.4rem}
+.quiz-nav .quiz-next{margin-top:0}
 .quiz-done{text-align:center;padding:.7rem 0}
 .quiz-score-big{font-size:2.2em;font-weight:800;color:var(--primary-d);
   display:block;margin-bottom:.25rem}
@@ -928,7 +934,7 @@ composto:[
 /* ============ QUIZ ENGINE ============ */
 const QSECTIONS=['cono','bicono','cilindro','tronco','composto'];
 const qState={};
-QSECTIONS.forEach(s=>{qState[s]={idx:0,score:0,answered:false,done:false};});
+QSECTIONS.forEach(s=>{qState[s]={idx:0,score:0,answers:[],done:false};});
 
 /* Rende le formule in LaTeX con KaTeX (se disponibile), con fallback CSS.
    Converte la notazione inline dei quiz: √(...) e √numero -> radice; ⅓ ½ ... ->
@@ -994,45 +1000,59 @@ function renderQuiz(s){
     body=`<div class="quiz-done">
       <span class="quiz-score-big">${icons[mi]} ${st.score}/${total}</span>
       <p class="quiz-msg">${msgs[mi]}</p>
-      <button class="quiz-restart" onclick="restartQuiz('${s}')">🔄 Ricomincia quiz</button>
+      <div class="quiz-nav" style="justify-content:center">
+        <button class="quiz-prev" onclick="reviewQuiz('${s}')">← Rivedi le risposte</button>
+        <button class="quiz-restart" onclick="restartQuiz('${s}')">🔄 Ricomincia quiz</button>
+      </div>
     </div>`;
   } else {
-    const q=qs[st.idx], pct=st.idx/total*100;
+    const q=qs[st.idx], pct=st.idx/total*100, chosen=st.answers[st.idx], answered=(chosen!=null);
+    const opts=q.opts.map((o,i)=>{
+      let cls='quiz-btn';
+      if(answered){ if(i===q.ans) cls+=' correct'; else if(i===chosen) cls+=' wrong'; }
+      return `<button class="${cls}"${answered?' disabled':` onclick="answerQuiz('${s}',${i})"`}>${'ABCD'[i]}) ${mathFmt(o)}</button>`;
+    }).join('');
+    let expHtml='';
+    if(answered){
+      const ok=chosen===q.ans;
+      expHtml=`<div class="quiz-exp ${ok?'ok':'no'}"><strong>${ok?'✓ Corretto!':'✗ Sbagliato.'}</strong> ${mathFmt(q.exp)}</div>`;
+    }
+    const prevBtn = st.idx>0 ? `<button class="quiz-prev" onclick="prevQuiz('${s}')">← Precedente</button>` : '';
+    const nextBtn = answered ? `<button class="quiz-next" onclick="nextQuiz('${s}')">${st.idx+1<total?'Prossima domanda →':'Vedi il risultato finale →'}</button>` : '';
+    const nav = (prevBtn||nextBtn) ? `<div class="quiz-nav">${prevBtn}${nextBtn}</div>` : '';
     body=`<div class="quiz-hd">
         <span style="color:var(--muted)">Domanda ${st.idx+1} / ${total}</span>
         <span style="font-weight:700;color:var(--primary-d)">Punteggio: ${st.score}</span>
       </div>
       <div class="quiz-bar-wrap"><div class="quiz-bar-fill" style="width:${pct}%"></div></div>
       <p class="quiz-q">${mathFmt(q.q)}</p>
-      <div class="quiz-opts">${q.opts.map((o,i)=>`<button class="quiz-btn" id="qb-${s}-${i}" onclick="answerQuiz('${s}',${i})">${'ABCD'[i]}) ${mathFmt(o)}</button>`).join('')}</div>
-      <div class="quiz-exp" id="qexp-${s}" style="display:none"></div>
-      <button class="quiz-next" id="qnxt-${s}" style="display:none" onclick="nextQuiz('${s}')">${st.idx+1<total?'Prossima domanda →':'Vedi il risultato finale →'}</button>`;
+      <div class="quiz-opts">${opts}</div>
+      ${expHtml}
+      ${nav}`;
   }
   el.innerHTML=`<div class="card"><h2>🧩 Quiz</h2>${body}</div>`;
 }
 function answerQuiz(s,chosen){
-  const st=qState[s]; if(st.answered) return; st.answered=true;
-  const q=QUIZZES[s][st.idx], correct=chosen===q.ans;
-  if(correct) st.score++;
-  for(let i=0;i<q.opts.length;i++){
-    const bt=document.getElementById(`qb-${s}-${i}`); if(!bt) continue;
-    bt.disabled=true;
-    if(i===q.ans) bt.classList.add('correct');
-    else if(i===chosen) bt.classList.add('wrong');
-  }
-  const exp=document.getElementById(`qexp-${s}`);
-  exp.style.display='';
-  exp.className=`quiz-exp ${correct?'ok':'no'}`;
-  exp.innerHTML=`<strong>${correct?'✓ Corretto!':'✗ Sbagliato.'}</strong> ${mathFmt(q.exp)}`;
-  document.getElementById(`qnxt-${s}`).style.display='';
-}
-function nextQuiz(s){
-  const st=qState[s]; st.idx++; st.answered=false;
-  if(st.idx>=QUIZZES[s].length) st.done=true;
+  const st=qState[s];
+  if(st.answers[st.idx]!=null) return;            // domanda già risposta
+  st.answers[st.idx]=chosen;
+  if(chosen===QUIZZES[s][st.idx].ans) st.score++;
   renderQuiz(s);
 }
+function nextQuiz(s){
+  const st=qState[s];
+  if(st.idx+1>=QUIZZES[s].length) st.done=true; else st.idx++;
+  renderQuiz(s);
+}
+function prevQuiz(s){
+  const st=qState[s];
+  if(st.idx>0){ st.idx--; renderQuiz(s); }
+}
+function reviewQuiz(s){                            // dal risultato finale torna all'ultima domanda
+  const st=qState[s]; st.done=false; st.idx=QUIZZES[s].length-1; renderQuiz(s);
+}
 function restartQuiz(s){
-  qState[s]={idx:0,score:0,answered:false,done:false};
+  qState[s]={idx:0,score:0,answers:[],done:false};
   renderQuiz(s);
 }
 
